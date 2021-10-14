@@ -1,0 +1,87 @@
+﻿@model WebLink.Models.LinkModel
+
+@{
+    ViewBag.Title = "EditLink";
+    Layout = "~/Areas/Link/Views/Shared/_LayoutManager.cshtml";
+}
+<div class="container">
+
+    <div class="card" style="margin:20px;">
+        <div class="card-header">
+            <strong>Edit link system</strong>
+        </div>
+        <br />
+        <form method="post" action="@Url.Action("EditLink", "Manager")" enctype="multipart/form-data" class="row" style="margin:5px">
+            @Html.AntiForgeryToken()
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="row form-group">
+                    <label class="col col-md-3">&nbsp;Department</label>
+                    <select name="IDdp" autofocus class=" browser-default custom-select form-control col-md-3" style="margin-left: 15px;">
+                        @if (ViewBag.ErrorCategories != null)
+                        {
+                            var b = Model.IDdp;
+                            foreach (var category in (ViewBag.ErrorCategories as List<WebLink.Models.DepartmentModel>))
+                            {
+                                var a = category.IDdp.ToString();
+                                if (a == b)
+                                {
+                                    <option selected value="@category.IDdp"> @category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.IDdp"> @category.Name</option>
+                                }
+
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="text-input" class=" form-control-label">SystemName</label></div>
+                    <div class="col-12 col-md-9"><input type="text" name="SystemName" placeholder="SystemName" class="form-control" value="@Model.SystemName"></div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Description</label></div>
+                    <div class="col-12 col-md-9"><textarea name="Description" rows="9" class="form-control">@Model.Description</textarea></div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="text-input" class=" form-control-label">Email</label></div>
+                    <div class="col-12 col-md-9"><input type="email" name="Email" placeholder="Email ..." class="form-control" value="@Model.Email"></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="text-input" class=" form-control-label">Owner</label></div>
+                    <div class="col-12 col-md-9"><input type="text" name="Owner" placeholder="Owner" class="form-control" value="@Model.Owner"></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="email-input" class=" form-control-label">Contact</label></div>
+                    <div class="col-12 col-md-9"><input type="text" name="Contact" placeholder="Contact" class="form-control" value="@Model.Contact"></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Link</label></div>
+                    <div class="col-12 col-md-9"><textarea name="Link" rows="9" class="form-control">@Model.Link</textarea></div>
+                </div>
+            </div>
+            <input type="hidden" id="IDLink" name="IDLink" value="@Model.IDLink">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 card-footer">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Save
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i>Reset
+                </button>
+            </div>
+        </form>
+
+        <div class="card-footer">
+            <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+
+</div>

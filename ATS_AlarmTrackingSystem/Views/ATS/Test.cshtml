@@ -1,0 +1,658 @@
+﻿
+@model IEnumerable<ATS_AlarmTrackingSystem.Models.Message>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<link href="~/Assets/css/animation_icon.css" rel="stylesheet" />
+
+<link href="~/Assets/css/test.css" rel="stylesheet" />
+<link href="~/Assets/css/chat.css" rel="stylesheet" />
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">ATS_Alarm system tracking</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <section class="col-lg-12 connectedSortable">
+                    <div class="card" id="more_infor">
+                        <div class="card-header" style="background-color: #1686ff; color: white;">
+                            <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i> Issue pending</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-wrap:break-word">
+                            <div class="tab-content p-0 table-responsive">
+                                <table class="table table-bordered table-hover" id="table_message" style="border-collapse: collapse;font-family: arial;">
+
+                                    <thead>
+                                        <tr>
+                                            <th class="filterhead">Ip address</th>
+                                            <th class="filterhead">Owner emp</th>
+                                            <th class="filterhead">Owner name</th>
+                                            <th class="filterhead">Building</th>
+                                            <th class="filterhead">Team</th>
+                                            <th class="filterhead">Emp user</th>
+                                            <th class="filterhead">Level user</th>
+                                            <th class="filterhead">Description</th>
+                                            <th class="filterhead">Status</th>
+                                            <th class="filterhead">Time Start</th>
+                                            <th class="filterhead">Time OnGoing</th>
+                                            <th class="filterhead">Time End</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Ip address</th>
+                                            <th scope="col">Owner emp</th>
+                                            <th scope="col">Owner name</th>
+                                            <th scope="col">Building</th>
+                                            <th scope="col">Team</th>
+                                            <th scope="col">Emp user</th>
+                                            <th scope="col">Level user</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Time Start</th>
+                                            <th scope="col">Time OnGoing</th>
+                                            <th scope="col">Time End</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row">
+
+                <!-- Info message -->
+                <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">Info message</a>
+                <!-- Warning message -->
+                <a class="btn btn-warning" onclick="toastr.warning('Hi! I am warning message.');">Warning message</a>
+                <!-- Success message -->
+                <a class="btn btn-success" onclick="toastr.success('Hi! I am success message.');">Success message</a>
+                <!-- Error message -->
+                <a class="btn btn-danger" onclick="toastr.error('Hi! I am error message.');">Error message</a>
+                <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
+                    <div class="toast-header">
+                        <svg class=" rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                             preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+                            <rect fill="#007aff" width="100%" height="100%" />
+                        </svg>
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small>11 mins ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script>
+    $('.toast').toast('show');
+
+    $(document).ready(function () {
+        loadData();
+    });
+
+    function loadData() {
+        $("#tbody tr").remove();
+        $.ajax({
+            url: "/api/getAllData",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result, function (key, item) {
+                    var html = '';
+                    html += '<tr>';
+                    html += '<td>' + item.ip_address + '</td>';
+                    if (item.owner_emp == "") {
+                        html += '<td style="text-align:center; align-content: center; margin: auto; height: 80px; position: relative; min-width:80px;"><div class="phonering-alo-phone phonering-alo-green phonering-alo-show" id="phonering-alo-phoneIcon">';
+                        html += '<div class="phonering-alo-ph-circle" title="Receiving and handling"></div><div class="phonering-alo-ph-circle-fill" title="Receiving and handling"></div><div class="phonering-alo-ph-img-circle" title="Receiving and handling" onClick="return action(\'' + item.id_ats + '\')"></div></div></td>';
+                    } else {
+                        html += '<td style="text-align:center; align-content: center; margin: auto; height: 80px; position: relative; min-width:80px;">' + item.owner_emp + '</td>';
+                    }
+                    if (item.owner_name == "") {
+                        html += '<td style="text-align:center"><i style="background-color:aliceblue;font-size: 16px;" class="fas fa-2x fa-sync-alt fa-spin"></i></td>';
+                    } else {
+                        html += '<td style="text-align:center" >' + item.owner_name + '</td>';
+                    }
+
+                    html += '<td>' + item.building + '</td>';
+                    html += '<td>' + item.team + '</td>';
+                    html += '<td>' + item.emp_user + '</td>';
+                    html += '<td>' + item.level_user + '</td>';
+                    html += '<td>' + item.description + '</td>';
+                    html += '<td>' + item.status + '</td>';
+                    html += '<td>' + item.time_start + '</td>';
+                    html += '<td>' + item.time_going + '</td>';
+                    html += '<td>' + item.time_end + '</td>';
+                    html += '</tr>';
+                    $('#tbody').append(html);
+                });
+
+                var table = $('#table_message').DataTable({
+                    "paging": false, fixedHeader: { header: true, footer: true }, responsive: false, autoWidth: false, aaSorting: [[8, 'desc']], cache: true,
+                    initComplete: function () {
+                    }
+                });
+                $(".filterhead").each(function (i) {
+                    if (i != 100) {
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(this).empty())
+                            .on('change', function () {
+                                var term = $(this).val();
+                                table.column(i).search(term, false, false).draw();
+                            });
+                        table.column(i).data().unique().sort().each(function (d, j) {
+                            const string = d;
+                            const substring = "class=";
+                            if (string.includes(substring) == true) {
+
+                            } else {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            }
+                        });
+                    } else {
+                        $(this).empty();
+                    }
+                });
+
+            },
+        });
+    }
+
+</script>
+
+
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            loadData();
+        });
+        //setInterval(myTimer, 1000);
+
+        //function myTimer() {
+        //    const d = new Date();
+        //    document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+        //}
+
+        function loadData() {
+            $("#tbody tr").remove();
+            $.ajax({
+                url: "/api/getAllData",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.each(result, function (key, item) {
+                        var html = '';
+                        html += '<tr>';
+                        html += '<td>' + item.ip_address + '</td>';
+                        if (item.owner_emp == "") {
+                            html += '<td style="text-align:center; align-content: center; margin: auto; height: 80px; position: relative; min-width:80px;"><div class="phonering-alo-phone phonering-alo-green phonering-alo-show" id="phonering-alo-phoneIcon">';
+                            html += '<div class="phonering-alo-ph-circle" title="Receiving and handling"></div><div class="phonering-alo-ph-circle-fill" title="Receiving and handling"></div><div class="phonering-alo-ph-img-circle" title="Receiving and handling" onClick="return action(\'' + item.id_ats + '\')"></div></div></td>';
+                        } else {
+                            html += '<td style="text-align:center; align-content: center; margin: auto; height: 80px; position: relative; min-width:80px;">' + item.owner_emp + '</td>';
+                        }
+                        if (item.owner_name == "") {
+                            html += '<td style="text-align:center"><i style="background-color:aliceblue;font-size: 16px;" class="fas fa-2x fa-sync-alt fa-spin"></i></td>';
+                        } else {
+                            html += '<td style="text-align:center" >' + item.owner_name + '</td>';
+                        }
+
+                        html += '<td>' + item.building + '</td>';
+                        html += '<td>' + item.team + '</td>';
+                        html += '<td>' + item.emp_user + '</td>';
+                        html += '<td>' + item.level_user + '</td>';
+                        html += '<td>' + item.description + '</td>';
+                        html += '<td>' + item.status + '</td>';
+                        html += '<td>' + item.time_start + '</td>';
+                        html += '<td>' + item.time_going + '</td>';
+                        html += '<td>' + item.time_end + '</td>';
+                        html += '</tr>';
+                        $('#tbody').append(html);
+                    });
+                    $('#table_message').DataTable({
+                        initComplete: function () {
+                            $(".filterhead").each(function (i) {
+                                if (i != 100) {
+                                    this.api().columns().every(function () {
+                                    var column = this;
+                                    var select = $('<select><option value=""></option></select>')
+                                        .appendTo($(column.footer()).empty())
+                                        .on('change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                                            column
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+                                    column.data().unique().sort().each(function (d, j) {
+                                        const string = d;
+                                        const substring = "class=";
+                                        if (string.includes(substring) == true) {
+
+                                        } else {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
+                                        }
+
+                                    });
+                                });
+                                } else {
+                                    $(this).empty();
+                                }
+                            });
+                        },
+
+                    });
+
+                },
+            });
+        }
+
+        function LoadDataTable() {
+            $('#table_message').DataTable({
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            const string = d;
+                            const substring = "class=";
+                            if (string.includes(substring) == true) {
+
+                            } else {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            }
+
+                        });
+                    });
+                },
+            });
+        }
+    </script>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@{
+        ViewBag.Title = "SearchNear";
+        Layout = "~/Views/Shared/_LayoutATS.cshtml";
+    }*@
+<!--<link href="~/Assets/css/tree.css" rel="stylesheet" />
+<div class="content-wrapper">-->
+<!-- Content Header (Page header) -->
+<!--<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Find people stay near </li>
+                </ol>
+            </div>-->
+<!-- /.col -->
+<!--</div>-->
+<!-- /.row -->
+<!--</div>--><!-- /.container-fluid -->
+<!--</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header" style="background-color:green;">
+                <h3 class="card-title"><button type="button" class="btn btn-tool" onClick="action();"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                <div class="form-group">
+                    <div class=" p-2" style="margin-bottom: 0;">
+                        <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                            <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Find people stay near</h4></legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="">Emp No</label>
+                                                <input type="text" class="form-control" id="emp7day" name="emp7day">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="">Date Start</label>
+                                                <input type="date" class="form-control" id="timestart" name="timestart">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="">Date End</label>
+                                                <input type="date" class="form-control" id="timeend" name="timeend">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group" data-select2-id="40">
+                                                <label>Select</label>
+                                                <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectsearch">
+                                                    <option value="0">Range 1 & Range 2 & Range 3</option>
+                                                    <option value="1">Range 1</option>
+                                                    <option value="2">Range 2</option>
+                                                    <option value="3">Range 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="button" class="form-control btn btn-primary" onclick="search7day();">
+                                                    <i class="fas fa-satellite"></i>&nbsp;
+                                                    Search
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="button" class="form-control btn btn-primary" onclick="searchTree();">
+                                                    <i class="fal fa-analytics"></i> &nbsp;
+                                                    Search Tree
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1" style="display:none;" id="downloadsearch">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                    <i class="fas fa-cloud-download-alt"></i>&nbsp;
+                                                    Download
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="row" id="result_search">
+                                <table class="table table-bordered table-striped" id="tbSearch">
+                                    <tbody id="tbodySearch"></tbody>
+                                </table>
+                            </div>
+                            <hr />
+                            <div class="row" id="note_rearch" style="display:none;">
+                                <div class="col-md-3 col-sm-6 col-12">
+                                    <div class="info-box">
+                                        <span class="info-box-icon ff0"></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Range</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12">
+                                    <div class="info-box">
+                                        <span class="info-box-icon ff1"></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Range 1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12">
+                                    <div class="info-box">
+                                        <span class="info-box-icon ff2"></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Range 2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12">
+                                    <div class="info-box">
+                                        <span class="info-box-icon ff3"></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Range 3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="container-fluid" id="rootshow" style="display:none;">
+                                <div class="row" style="margin-left: 2%; margin-bottom: 50px;">
+                                    <div class="tree">
+                                        <ul id="root">
+                                            <li id="rootEle">
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body" style="padding-top:0px;padding-bottom:0px; display:none; " id="searchone">
+                <div class="form-group">
+                    <div class=" p-2" style="margin-bottom: 0;">
+                        <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                            <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Searching for information about people eating </h4></legend>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <div class="form-group" style=" margin-top: 30px;">-->
+<!-- Extra large modal -->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-magnet"></i> Find</button>
+                                            <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Find out where and when to eat</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="GET">
+                                                                <div class="form-group">
+                                                                    <label for="recipient-name" class="col-form-label">Emp No:</label>
+                                                                    <input type="text" class="form-control" id="search" name="search">
+                                                                </div>
+                                                            </form>
+                                                            <div style="text-align:center;align-content:center;display:none;" id="121212">
+                                                                <div class="spinner-border" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                            <div id="dresult">
+                                                                <table id="result" class="table table-bordered table-striped">
+                                                                    <tbody id="tbody"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="SearchInfor();">Search</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No</label>
+                                                    <input type="text" class="form-control" id="empnosearch" name="empnosearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Position</label>
+                                                    <input type="text" class="form-control" id="positionsearch" name="positionsearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Time eat</label>
+                                                    <input type="text" class="form-control" id="timesearch" name="timesearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchF();">
+                                                        <i class="fas fa-satellite"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="display:none;" id="downloadexcel">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbExcel', 'Danhsachtiepxuc')">
+                                                        <i class="fas fa-comments-dollar"></i>&nbsp;
+                                                        Download Excel
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loading">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="tree">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">Parent</a>
+                                                    <ul>
+                                                        <li>
+                                                            <i class="fas fa-user ficon f0"></i><br />
+                                                            <p>V09912</p>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="#">Grand Child</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Child</a>
+                                                            <ul>
+                                                                <li><a href="#">Grand Child</a></li>
+                                                                <li>
+                                                                    <a href="#">Grand Child</a>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li><a href="#">Grand Child</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbExcel">
+                                        <tbody id="tbodyResult"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    function action() {
+        if (document.getElementById('searchone').style.display == 'block') {
+            document.getElementById('searchone').style.display = 'none';
+        } else {
+            document.getElementById('searchone').style.display = 'block';
+        }
+    }
+
+</script>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/test.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />-->

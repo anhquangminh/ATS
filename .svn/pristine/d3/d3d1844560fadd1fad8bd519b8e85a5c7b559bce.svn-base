@@ -1,0 +1,484 @@
+﻿
+@{
+    ViewBag.Title = "Excel";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<style type="text/css">
+    .table {
+        border: 0px;
+    }
+
+    td {
+        border: 0px;
+    }
+
+    table > tbody > tr > td {
+        border: 0px;
+    }
+
+    table > tfoot > tr > th > select {
+        max-width: 80px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .content-header {
+        padding: 5px .5rem;
+    }
+
+    .canvasjs-chart-toolbar {
+        display: none;
+    }
+
+    .button {
+        background-color: #004A7F;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        border: none;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: Arial;
+        font-size: 20px;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    table thead {
+        background-color: #4a5a5482;
+    }
+    table th, td {
+        white-space: nowrap;
+    }
+
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Tải lên thư mục excel</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <script type="text/javascript">
+                           alert("@ViewBag.Message");
+                    </script>
+                }
+                <div class="card col-6">
+                    <div class="card-header">
+                        <h4>Tải lên thư mục excel</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @using (Html.BeginForm("ExcelGA", "ATS", FormMethod.Post, new { enctype = "multipart/form-data", @class = "col-12" }))
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input name="file" class="form-control" type="file" placeholder="" style="padding:3px;" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <input type="submit" class="btn-default " value="Tải lên" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div> <label class="text-success">@ViewBag.Message</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-lg-12 connectedSortable">
+                    <div class="card">
+                        <div class="card-header" style="background-color: #1686ff; color: white;">
+                            <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i>Thông tin</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class=" table-responsive">
+                                @if (ViewBag.Data != null)
+                                {
+                                    <table class="table table-bordered  table-hover" id="table_message" style="width:100%; border-collapse: collapse;font-family: arial; font-size:13px;">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>mathe</th>
+                                                <th>hoten</th>
+                                                <th>hotentq</th>
+                                                <th>khuxuong</th>
+                                                <th>bu</th>
+                                                <th>cft</th>
+                                                <th>toanha</th>
+                                                <th>bophan</th>
+                                                <th>ngayvaoxuong</th>
+                                                <th>phancap</th>
+                                                <th>capbac</th>
+                                                <th>gioitinh</th>
+                                                <th>machiphi</th>
+                                                <th>ngaysinh</th>
+                                                <th>cmt</th>
+                                                <th>ngayvaoKTX</th>
+                                                <th>ngayraKTX</th>
+                                                <th>quequan</th>
+                                                <th>toaKTX</th>
+                                                <th>sophong</th>
+                                                <th>sogiuong</th>
+                                                <th>ghichu</th>
+                                                <th>nguoitailen</th>
+                                                <th>thoigiantai</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.Data)
+                                            {
+                                                <tr>
+                                                    <td style="text-align:center"><a href="#" onclick="return GetbyID('@item.id')"><i class="fas fa-edit"></i></a></td>
+                                                    <td style="text-align:center"><a href="#" onclick="DeleteGA('@item.id')"><i class="far fa-trash-alt"></i></a></td>
+                                                    <td>@item.mathe</td>
+                                                    <td>@item.hoten</td>
+                                                    <td>@item.hotentq</td>
+                                                    <td>@item.khuxuong</td>
+                                                    <td>@item.bu</td>
+                                                    <td>@item.cft</td>
+                                                    <td>@item.toanha</td>
+                                                    <td>@item.bophan</td>
+                                                    <td>@item.ngayvaoxuong</td>
+                                                    <td>@item.phancap</td>
+                                                    <td>@item.capbac</td>
+                                                    <td>@item.gioitinh</td>
+                                                    <td>@item.machiphi</td>
+                                                    <td>@item.ngaysinh</td>
+                                                    <td>@item.cmt</td>
+                                                    <td>@item.ngayvaoKTX</td>
+                                                    <td>@item.ngayraKTX</td>
+                                                    <td>@item.quequan</td>
+                                                    <td>@item.toaKTX</td>
+                                                    <td>@item.sophong</td>
+                                                    <td>@item.sogiuong</td>
+                                                    <td>@item.ghichu</td>
+                                                    <td>@item.nguoitailen</td>
+                                                    <td>@item.thoigiantai</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>mathe</th>
+                                                <th>hoten</th>
+                                                <th>hotentq</th>
+                                                <th>khuxuong</th>
+                                                <th>bu</th>
+                                                <th>cft</th>
+                                                <th>toanha</th>
+                                                <th>bophan</th>
+                                                <th>ngayvaoxuong</th>
+                                                <th>phancap</th>
+                                                <th>capbac</th>
+                                                <th>gioitinh</th>
+                                                <th>machiphi</th>
+                                                <th>ngaysinh</th>
+                                                <th>cmt</th>
+                                                <th>ngayvaoKTX</th>
+                                                <th>ngayraKTX</th>
+                                                <th>quequan</th>
+                                                <th>toaKTX</th>
+                                                <th>sophong</th>
+                                                <th>sogiuong</th>
+                                                <th>ghichu</th>
+                                                <th>nguoitailen</th>
+                                                <th>thoigiantai</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+                <i class="fas fa-chevron-up"></i>
+            </a>
+        </div>
+    </section>
+    @*View edit*@
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="card card-blue" style="margin:0px">
+                    <div class="card-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title" id="myModalLabel">Chỉnh sửa thông tin </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="row col-12">
+                            <div class="col-6">
+                                <input type="text" name="id" id="id" hidden />
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-inbox"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="mathe" name="mathe" id="mathe">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="hoten" name="hoten" id="hoten">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="ho ten trung quoc" name="hotentq" id="hotentq">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="phapnhan" name="phapnhan" id="phapnhan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="khuxuong" name="khuxuong" id="khuxuong">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="bu" name="bu" id="bu">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="cft" name="cft" id="cft">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="toanha" name="toanha" id="toanha">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="bophan" name="bophan" id="bophan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control" placeholder="ngayvaoxuong" name="ngayvaoxuong" id="ngayvaoxuong">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="phancap" name="phancap" id="phancap">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="capbac" name="capbac" id="capbac">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="gioitinh" name="gioitinh" id="gioitinh">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="machiphi" name="machiphi" id="machiphi">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control" placeholder="ngaysinh" name="ngaysinh" id="ngaysinh">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" placeholder="cmt" name="cmt" id="cmt">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control" placeholder="ngayvaoKTX" name="ngayvaoKTX" id="ngayvaoKTX">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control" placeholder="ngayraKTX" name="ngayraKTX" id="ngayraKTX">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="quequan" name="quequan" id="quequan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="toaKTX" name="toaKTX" id="toaKTX">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="sophong" name="sophong" id="sophong">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="sogiuong" name="sogiuong" id="sogiuong">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="ghichu" name="ghichu" id="ghichu">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer" style="align-content:center;text-align:center;">
+                        <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="UpdateGA();">Chỉnh sửa</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+    <script src="~/Scripts/ajax/ga_ajax.js"></script>
+    <script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+    <link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#table_message').DataTable({
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            const string = d;
+                            const substring = "class=";
+                            if (string.includes(substring) == true) {
+
+                            } else {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            }
+
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+
+

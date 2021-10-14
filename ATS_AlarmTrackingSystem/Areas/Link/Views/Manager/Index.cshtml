@@ -1,0 +1,472 @@
+﻿@model IEnumerable<WebLink.Models.LinkModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Link/Views/Shared/_LayoutManager.cshtml";
+  }
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+
+}
+<div class="container" style="padding:0px;">
+    <table id="example" class=" table-bordered table-striped" style="max-width:100%;width: 100% !important;">
+        <thead>
+            <tr style="color: white; background-color: #2262c6 !important;">
+                <th style="padding-right: 18px;">STT</th>
+                <th>Name Department</th>
+                <th>System Name</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Link</th>
+                <th>Modify</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.STT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NameDP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SystemName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contact)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Link)
+                        @*<a title="@Html.DisplayFor(modelItem => item.Link)" target="_blank" href="@Html.DisplayFor(modelItem => item.Link)"> Click me</a>*@
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditLink", new { id = item.IDLink }, new { onclick = "return confirm('Are you sure edit ? System : " + item.SystemName + "');" }) |
+                        @Html.ActionLink("Delete", "DeleteLink", new { id = item.IDLink }, new { onclick = "return confirm('Are you sure delete ? System:" + item.SystemName + " ');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>STT</th>
+                <th>NameDP</th>
+                <th>SystemName</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Link</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+</script>
+
+
+<!--@if (ViewBag.hiden == null)
+{
+    <div class="mobile-menu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mobile-menu">
+                        <nav id="dropdown">
+                            <ul class="mobile-menu-nav">
+                                @if (ViewBag.ErrorCategories != null)
+                                {
+                                    foreach (var category in (ViewBag.ErrorCategories as List<WebLink.Models.DepartmentModel>))
+                                    {
+                                        if (string.IsNullOrEmpty(ViewBag.iddp))
+                                        {
+                                            if (category.IDdp == "1")
+                                            {
+                                                <li class="active">
+                                                    <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-edit"></i> @category.Name</a>
+
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-form"></i> @category.Name</a>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (category.IDdp == ViewBag.iddp)
+                                            {
+                                                <li class="active">
+                                                    <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-edit"></i> @category.Name</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-form "></i> @category.Name</a>
+                                                </li>
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}-->
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<!--@if (ViewBag.hiden == null)
+{
+    <div class="main-menu-area mg-t-15">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    @{
+                        var parameter = Request.QueryString["ac"];
+                        //Check parameter here and display Message
+                        if (parameter == "success")
+                        {
+                            <div class="alert alert-success alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Add Department Successfully.</strong>
+                            </div>
+                        }
+                        else if (parameter == "err")
+                        {
+                            <div class="alert alert-error bg-warning alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Must not be left blank</strong>
+                            </div>
+                        }
+                        var link = Request.QueryString["link"];
+                        //Check parameter here and display Message
+                        if (link == "success")
+                        {
+                            <div class="alert alert-success alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Add New link Successfully.</strong>
+                            </div>
+                        }
+                        else if (link == "err")
+                        {
+                            <div class="alert alert-error bg-warning alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Must not be left blank</strong>
+                            </div>
+                        }
+                    }
+
+                    <form method="post" action="@Url.Action("CreateDepartmet", "Manager")">
+
+                        <fieldset>
+                            <legend style="font-size: 18px; padding: 5px; font-family: 'FontAwesome';">&nbsp; Add department</legend>
+                            <div class="form-group row">
+                                <div class="form-group col-md-5 row ">
+                                    <div class="col-md-12 form-group row">
+                                        <label style="text-align:right;" class="col-md-4">&nbsp;Name :</label>
+                                        <input type="text" name="Name" id="Name" class="form-control col-md-8" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-5 ">
+                                    <div class="col-md-12 form-group row">
+                                        <label class="col-md-4" style="text-align:right;">&nbsp;Note : </label>
+                                        <input type="text" name="Note" class="form-control col-md-8" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 ">
+                                    <div class="col-md-12 form-group row">
+                                        <input type="submit" class="form-control col-md-6" value="Save" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <form method="post" action="@Url.Action("CreateLink", "Manager")">
+                        <fieldset>
+                            <legend style="background-color:#448ac1;color: #FFEB3B;font-size: 18px;padding: 5px;font-family: 'FontAwesome';">&nbsp; Add new link</legend>
+                            <div class="form-group row">
+                                <div class="form-group col-md-3 row ">
+                                    <div class="col-md-12 form-group row">
+                                        <label style="text-align:right;" class="col-md-6">&nbsp;Department</label>
+                                        <select name="IDdp" autofocus class="browser-default custom-select form-control col-md-6">
+                                            @if (ViewBag.ErrorCategories != null)
+                                            {
+                                                foreach (var category in (ViewBag.ErrorCategories as List<WebLink.Models.DepartmentModel>))
+                                                {
+                                                    <option selected value="@category.IDdp">@category.Name</option>
+
+                                                }
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3" style="margin: 0px; padding: 0px;">
+                                    <div class="col-md-12 form-group row">
+                                        <input name="Description" type="text" class="form-control col-md-12" placeholder="Description" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2" style="margin: 0px; padding: 0px;">
+                                    <div class="col-md-12 form-group row">
+                                        <input name="Contact" type="text" class="form-control col-md-12" placeholder="Contact" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3" style="margin: 0px; padding: 0px;">
+                                    <div class="col-md-12 form-group row">
+                                        <input name="Link" type="text" class="form-control col-md-12" placeholder="Link" />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1 " style="margin: 0px; padding: 0px;">
+                                    <div class="col-md-12 form-group row">
+                                        <input type="submit" class="form-control col-md-12" value="save" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+                        @if (ViewBag.ErrorCategories != null)
+                        {
+                            foreach (var category in (ViewBag.ErrorCategories as List<WebLink.Models.DepartmentModel>))
+                            {
+                                if (string.IsNullOrEmpty(ViewBag.iddp))
+                                {
+                                    if (category.IDdp == "1")
+                                    {
+                                        <li class="active">
+                                            <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-edit"></i> @category.Name</a>
+
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-form"></i> @category.Name</a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    if (category.IDdp == ViewBag.iddp)
+                                    {
+                                        <li class="active">
+                                            <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-edit"></i> @category.Name</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("index", "Manager", new { id = category.IDdp }, null)"><i class="notika-icon notika-form "></i> @category.Name</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}-->
+<!--<div class="container" style="margin-top:20px;margin-bottom:20px;">
+    <div class="col-lg-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Basic Form</strong> Elements
+            </div>
+            <div class="card-body card-block">
+                <form action="#" method="post" enctype="multipart/form-data" class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="text-input" class=" form-control-label">Text Input</label></div>
+                            <div class="col-12 col-md-9"><input type="text" id="text-input" name="text-input" placeholder="Text" class="form-control"><small class="form-text text-muted">This is a help text</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="email-input" class=" form-control-label">Email Input</label></div>
+                            <div class="col-12 col-md-9"><input type="email" id="email-input" name="email-input" placeholder="Enter Email" class="form-control"><small class="help-block form-text">Please enter your email</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="password-input" class=" form-control-label">Password</label></div>
+                            <div class="col-12 col-md-9"><input type="password" id="password-input" name="password-input" placeholder="Password" class="form-control"><small class="help-block form-text">Please enter a complex password</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Textarea</label></div>
+                            <div class="col-12 col-md-9"><textarea name="textarea-input" id="textarea-input" rows="9" placeholder="Content..." class="form-control"></textarea></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="select" class=" form-control-label">Select</label></div>
+                            <div class="col-12 col-md-9">
+                                <select name="select" id="select" class="form-control">
+                                    <option value="0">Please select</option>
+                                    <option value="1">Option #1</option>
+                                    <option value="2">Option #2</option>
+                                    <option value="3">Option #3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="text-input" class=" form-control-label">Text Input</label></div>
+                            <div class="col-12 col-md-9"><input type="text" id="text-input" name="text-input" placeholder="Text" class="form-control"><small class="form-text text-muted">This is a help text</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="email-input" class=" form-control-label">Email Input</label></div>
+                            <div class="col-12 col-md-9"><input type="email" id="email-input" name="email-input" placeholder="Enter Email" class="form-control"><small class="help-block form-text">Please enter your email</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="password-input" class=" form-control-label">Password</label></div>
+                            <div class="col-12 col-md-9"><input type="password" id="password-input" name="password-input" placeholder="Password" class="form-control"><small class="help-block form-text">Please enter a complex password</small></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Textarea</label></div>
+                            <div class="col-12 col-md-9"><textarea name="textarea-input" id="textarea-input" rows="9" placeholder="Content..." class="form-control"></textarea></div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="select" class=" form-control-label">Select</label></div>
+                            <div class="col-12 col-md-9">
+                                <select name="select" id="select" class="form-control">
+                                    <option value="0">Please select</option>
+                                    <option value="1">Option #1</option>
+                                    <option value="2">Option #2</option>
+                                    <option value="3">Option #3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="data-table-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                    <div class="basic-tb-hd">
+                        <h2>List link web</h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="data-table-basic" class="table table-striped">
+                            <thead style="background-color: darkgray;">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Description</th>
+                                    <th>Contact</th>
+                                    <th>Link</th>
+                                    <th>Modify</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.STT)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Contact)
+                                        </td>
+                                        <td>
+                                            <a title="@Html.DisplayFor(modelItem => item.Link)" target="_blank" href="@Html.DisplayFor(modelItem => item.Link)"> Click me</a>
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditLink", new { id = item.IDLink }) |
+                                            @Html.ActionLink("Delete", "DeleteLink", new { id = item.IDLink })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->

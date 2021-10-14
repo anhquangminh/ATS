@@ -1,0 +1,178 @@
+﻿@model IEnumerable<ATS_AlarmTrackingSystem.Models.OwnerDepart>
+@{
+    ViewBag.Title = "ConfigOwner";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<style type="text/css">
+    .table {
+        border: 0px;
+    }
+
+    td {
+        border: 0px;
+    }
+
+    table > tbody > tr > td {
+        border: 0px;
+    }
+
+    table > tfoot > tr > th > select {
+        max-width: 150px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .content-header {
+        padding: 5px .5rem;
+    }
+
+    .canvasjs-chart-toolbar {
+        display: none;
+    }
+</style>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+
+                        <li class="breadcrumb-item active">CRC Config Owner</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header  bg-blue" style="margin:0px;">
+                            <h3 class="card-title"><i class="fas fa-address-card"></i> &nbsp; Infor Owner</h3>
+                        </div>
+                        <div class="card-body table-responsive ">
+                            <table class="table table-bordered  table-hover " id="table_owner" style="border-collapse: collapse">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Emp</th>
+                                        <th>Name VietNam</th>
+                                        <th>Name China</th>
+                                        <th>Building</th>
+                                        <th>Team</th>
+                                        <th>Trusted</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th>Emp</th>
+                                        <th>Name VietNam</th>
+                                        <th>Name China</th>
+                                        <th>Building</th>
+                                        <th>Team</th>
+                                        <th>Trusted</th>
+                                        <th style="display:none"></th>
+                                        <th style="display:none"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="far fa-calendar-plus"></i> &nbsp; new owner</h3>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">
+                                <i class="fas fa-user-plus"></i>&nbsp;
+                                Add New Employee
+                            </button><br />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="card card-blue" style="margin:0px">
+                            <div class="card-header">
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <h4 class="modal-title" id="myModalLabel">Add Employee</h4>
+                            </div>
+                            <div class="card-body">
+                                <form method="post">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-inbox"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Emp" name="owner_emp" id="emp">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Name VietNam" name="name_vn" id="name_vn">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Building" name="building" id="building">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                            </div>
+                                            <select class="custom-select rounded-0" id="team" name="team">
+                                                <option value="SFIS" selected>SFIS</option>
+                                                <option value="NETWORK">NETWORK</option>
+                                                <option value="ALLPART">ALLPART</option>
+                                                <option value="APP">APP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-primary" id="btnAdd" onclick="return Add();">Add</button>
+                                <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="UpdateOwner();">Update</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/owner_ajax.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+

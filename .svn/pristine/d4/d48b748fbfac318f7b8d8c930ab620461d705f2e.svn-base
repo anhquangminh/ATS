@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Title = "SearchInfor";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<link href="~/Assets/css/loader.css" rel="stylesheet" />
+<div class="content-wrapper" id="contener">
+    <div class="content-header">
+    </div>
+    <section class="content">
+        <div class="card card-blue">
+            <div class="card-body ">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-search"></i>&nbsp;Search </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Search Infor Employ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="GET">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Emp name:</label>
+                                        <input type="text" class="form-control" id="search" name="search">
+                                    </div>
+                                </form>
+                                <div style="text-align:center;align-content:center;display:none;" id="121212" >
+                                    <div class="spinner-border" role="status" >
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div id="dresult">
+                                    <table id="result" class="table table-bordered">
+                                        <tbody id="tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="SearchInfor();">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-info">
+            <div class="card-header">
+                <h3 class="card-title">Horizontal Form</h3>
+            </div>
+            <form class="form-horizontal">
+                <div class="card-body row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Emp No:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="emp" name="emp" data-placeholder="Emp No" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>User Name:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="name" name="name" data-placeholder="User Name" disabled> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-4">
+                        <div class="form-group">
+                            <label>Department:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-closed-captioning"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="depart" name="depart" data-placeholder="Department" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-envelope "></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="email" name="email" data-placeholder="Email" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-4">
+                        <div class="form-group">
+                            <label>Number phone:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="phone" name="phone" data-placeholder="Number phone">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info ">Sign in</button>
+                        <button type="submit" class="btn btn-default ">Cancel</button>
+                    </div>
+                </div>
+                <!-- /.card-footer -->
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="w3-container" style="display:none;" id="upload">
+                <p>Label outside of the progress bar:</p>
+                <div class="w3-light-grey">
+                    <div id="myBar" class="w3-container w3-green" style="height:30px;width:10%">
+                        <p id="myP" style="margin:4px;"><span id="demo">0</span> %</p>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <button class="w3-button w3-light-grey" onclick="move();this.disabled='true'">Upload</button>
+            <br />
+        </div>
+    </section>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/search_ajax.js"></script>
+
+<script>
+    function move() {
+        document.getElementById("upload").style.display = 'block';
+        var elem = document.getElementById("myBar");
+        var width = 10;
+        var id = setInterval(frame, 50);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                document.getElementById("myP").className = "w3-animate-opacity";
+                document.getElementById("myP").innerHTML = "Successfully uploaded";
+                document.getElementById("myP").style.textAlign = "Center";
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                var num = width;
+                num = num.toFixed(0)
+                document.getElementById("demo").innerHTML = num;
+            }
+        }
+    }
+</script>

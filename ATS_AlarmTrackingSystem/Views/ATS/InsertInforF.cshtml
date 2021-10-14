@@ -1,0 +1,534 @@
+﻿
+@{
+    ViewBag.Title = "InsertInforF";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<style>
+    .input-group {
+        margin-bottom: 5px;
+    }
+
+    .input-group-text {
+        font-size: 12px;
+    }
+
+    .lbtxt {
+        font-size: 12px;
+    }
+
+    .input-group-prepend {
+        width: 110px;
+    }
+
+    .input-group-text {
+        min-width: 100%;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">UPLOAD FILE EXCEL INFOR USER</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="row" style="margin:10px; margin-bottom:0px;" id="InsertExcel">
+            <div class="card" style="width:100%;">
+                <div class="card-header bg-success ">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload file excel infor user
+                    <div class="card-tools">
+                        <button type="button" style="padding: 0px; color: #dfefe4; margin-right: 25px; " class="btn btn-too" data-toggle="modal" data-target="#SearchLock"><i class="fas fa-user-lock"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-7">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Import excel file infor user / Tải tệp excel thông tin </legend>
+                                    @using (Html.BeginForm("InsertInforF", "ATS", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="control-label col-md-12 ">Choose file/ Chọn tệp</label>
+                                                <input name="file" type="file" class="form-control" style="padding-top: 3px; padding-left: 3px;" />
+                                            </div>
+                                            <div class="">
+                                                <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                                <input type="submit" class="col-12 btn-outline-primary form-control" value="Upload/ Tải lên" style="margin-top:7px;" />
+                                            </div>
+                                        </div>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Download format/ Tải xuống file mẫu </legend>
+                                    <div class="row" style="margin-bottom: 7px; margin-left:10px;">
+                                        <div class="">
+                                            <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                            <a class="col-12 btn-outline-primary form-control" href='@Url.Action("DownloadFileIsolation", "ATS")'>Download/ Tải xuống</a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left col -->
+                        <section class="col-lg-12 connectedSortable">
+                            <!-- Custom tabs (Charts with tabs)-->
+                            <div class="card" id="more_infor">
+                                <div class="card-header" style="background-color: #1686ff; color: white;">
+                                    <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i> List infor/ Danh sách thông tin </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="overflow-wrap:break-word">
+                                    <div class="tab-content p-0 table-responsive">
+                                        <table class="table table-bordered table-hover" id="table_Isolation" style="font-family: arial;font-size:12px;">
+                                            <thead>
+                                                <tr>
+                                                    @*<th scope="col"></th>
+                                                        <th scope="col"></th>*@
+                                                    <th scope="col">NhaXuong</th>
+                                                    <th scope="col">PhapNhan</th>
+                                                    <th scope="col">ToaXuong</th>
+                                                    <th scope="col">BU</th>
+                                                    <th scope="col">CFT</th>
+                                                    <th scope="col">BoPhan</th>
+                                                    <th scope="col">Chuyen</th>
+                                                    <th scope="col">CaLV</th>
+                                                    <th scope="col">IDL</th>
+                                                    <th scope="col">MaNhanVien</th>
+                                                    <th scope="col">TenTV</th>
+                                                    <th scope="col">TenTQ</th>
+                                                    <th scope="col">GioiTinh</th>
+                                                    <th scope="col">NgaySinh</th>
+                                                    <th scope="col">DienThoai</th>
+                                                    <th scope="col">PhuongTien</th>
+                                                    <th scope="col">DCTamTru</th>
+                                                    <th scope="col">DCThuongTru </th>
+                                                    <th scope="col">LoaiHinhCNV </th>
+                                                    <th scope="col"> NgayLVCuoi</th>
+                                                    <th scope="col">NgayTiepXuc </th>
+                                                    <th scope="col">CachLyNgay </th>
+                                                    <th scope="col">DuKienKetThucCL </th>
+                                                    <th scope="col">ChonDoTX </th>
+                                                    <th scope="col">NguyenNhanCT </th>
+                                                    <th scope="col">LoaiHinhCL </th>
+                                                    <th scope="col"> PhuongThucCL</th>
+                                                    <th scope="col">NgayXN </th>
+                                                    <th scope="col"> DiaDiemXN</th>
+                                                    <th scope="col">TiemVaccien </th>
+                                                    <th scope="col"> ThoiGianTiem</th>
+                                                    <th scope="col">DiaDiemTiem </th>
+                                                    <th scope="col">DaKetThucCL </th>
+                                                    <th scope="col">TinhTrangCL</th>
+                                                    <th scope="col">NgayKTCL </th>
+                                                    <th scope="col">TinhTrang</th>
+                                                    <th scope="col">NguoiTaiLen </th>
+                                                    <th scope="col">NgayTaiLen </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    @*<th></th>
+                                                        <th></th>*@
+                                                    <th>NhaXuong</th>
+                                                    <th>PhapNhan</th>
+                                                    <th>ToaXuong</th>
+                                                    <th>BU</th>
+                                                    <th>CFT</th>
+                                                    <th>BoPhan</th>
+                                                    <th>Chuyen</th>
+                                                    <th>CaLV</th>
+                                                    <th>IDL</th>
+                                                    <th>MaNhanVien</th>
+                                                    <th>TenTV</th>
+                                                    <th>TenTQ</th>
+                                                    <th>GioiTinh</th>
+                                                    <th>NgaySinh</th>
+                                                    <th>DienThoai</th>
+                                                    <th>PhuongTien</th>
+                                                    <th>DCTamTru</th>
+                                                    <th>DCThuongTru </th>
+                                                    <th>LoaiHinhCNV </th>
+                                                    <th> NgayLVCuoi</th>
+                                                    <th>NgayTiepXuc </th>
+                                                    <th>CachLyNgay </th>
+                                                    <th>DuKienKetThucCL </th>
+                                                    <th>ChonDoTX </th>
+                                                    <th>NguyenNhanCT </th>
+                                                    <th>LoaiHinhCL </th>
+                                                    <th> PhuongThucCL</th>
+                                                    <th>NgayXN </th>
+                                                    <th> DiaDiemXN</th>
+                                                    <th>TiemVaccien </th>
+                                                    <th> ThoiGianTiem</th>
+                                                    <th>DiaDiemTiem </th>
+                                                    <th>DaKetThucCL </th>
+                                                    <th>TinhTrangCL</th>
+                                                    <th>NgayKTCL </th>
+                                                    <th>TinhTrang</th>
+                                                    <th>NguoiTaiLen </th>
+                                                    <th>NgayTaiLen </th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div><!-- /.card-body -->
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+    @*View edit*@
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="card card-blue" style="margin:0px">
+                    <div class="card-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title" id="myModalLabel">Update infor/ Chỉnh sửa thông tin </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="row col-12">
+                            <input type="text" name="id" id="id" hidden />
+                            <div class="form-group col-4">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Nha Xuong</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NhaXuong" id="NhaXuong">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Phap Nhan</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="PhapNhan" id="PhapNhan">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Toa Xuong</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="ToaXuong" id="ToaXuong">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">BU</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="BU" id="BU">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">CFT</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="CFT" id="CFT">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Bo Phan</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="BoPhan" id="BoPhan">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Chuyen</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="Chuyen" id="Chuyen">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> Ca LV </span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="CaLV" id="CaLV">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">IDL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="IDL" id="IDL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">MaNhanVien</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="MaNhanVien" id="MaNhanVien">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TenTV</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="TenTV" id="TenTV">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TenTQ</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="TenTQ" id="TenTQ">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">GioiTinh</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="GioiTinh" id="GioiTinh">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NgaySinh</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NgaySinh" id="NgaySinh">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DienThoai</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DienThoai" id="DienThoai">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">PhuongTien</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="PhuongTien" id="PhuongTien">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DCTamTru</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DCTamTru" id="DCTamTru">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DCThuongTru</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DCThuongTru" id="DCThuongTru">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">LoaiHinhCNV</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="LoaiHinhCNV" id="LoaiHinhCNV">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NgayLVCuoi</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NgayLVCuoi" id="NgayLVCuoi">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NgayLVCuoi</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NgayTiepXuc" id="NgayTiepXuc">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">CachLyNgay</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="CachLyNgay" id="CachLyNgay">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DuKienKetThucCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DuKienKetThucCL" id="DuKienKetThucCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">ChonDoTX</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="ChonDoTX" id="ChonDoTX">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NguyenNhanCT</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NguyenNhanCT" id="NguyenNhanCT">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">LoaiHinhCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="LoaiHinhCL" id="LoaiHinhCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">PhuongThucCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="PhuongThucCL" id="PhuongThucCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NgayXN</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NgayXN" id="NgayXN">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DiaDiemXN</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DiaDiemXN" id="DiaDiemXN">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TiemVaccien</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="TiemVaccien" id="TiemVaccien">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">ThoiGianTiem</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="ThoiGianTiem" id="ThoiGianTiem">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DiemDiemTiem</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DiemDiemTiem" id="DiemDiemTiem">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">DaKetThucCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="DaKetThucCL" id="DaKetThucCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TinhTrangCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="TinhTrangCL" id="TinhTrangCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NgayKTCL</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="NgayKTCL" id="NgayKTCL">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TinhTrang</span>
+                                    </div>
+                                    <input type="text" class="form-control lbtxt" name="TinhTrang" id="TinhTrang">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer" style="align-content:center;text-align:center;">
+                        <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="UpdateIsolation();">Update/ Lưu lại</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close/ Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal fade" id="SearchLock" tabindex="-1" role="dialog" aria-labelledby="SearchLock" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Permissions Management/ Quản lý </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="margin:auto; text-align: center; width:100%; border-bottom:1px solid black;">
+                     <buton id="btnSearch" class="btn btn-danger" onclick="action()">Search EMP/ Tra trứu</buton>
+                     <buton id="btnUnlock" class="btn btn-default" onclick="action2()">Unlock EMP/ Mở khóa</buton>
+                </div>
+                <div class="modal-body">
+                    <form id="divSearch" style="display:block;">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Emp:</label>
+                            <input type="text" class="form-control" id="search" name="search">
+                        </div>
+                    </form>
+                    <form id="divUnlock" style="display:none;">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label col-12" style="padding-bottom: 0px; padding-left: 0px;">Emp:</label>
+                            <label style="padding:0px;font-size:13px;color:red;" for="recipient-name" class="col-form-label">Chú ý: Nếu có nhiều mã thẻ thì ngăn cách nhau bởi dấy phấy ( , )</label>
+                            <textarea class="form-control" rows="4" id="emps" placeholder="V010000,V022222,V011111"></textarea>
+                            <label for="recipient-name" class="col-form-label">Reason/ Lý do:</label>
+                            <input type="text" class="form-control" id="reason" name="reason">
+                        </div>
+                    </form>
+                    <div style="text-align:center;align-content:center;display:none;" id="loading">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div id="dresult" style="display:block;">
+                        <table id="result" class="table table-bordered">
+                            <tbody id="tbodySearch">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="dresult1" style="display:none;">
+                        <table id="result" class="table table-bordered">
+                            <tbody id="tbodySearch">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="btnSearchEmp" type="button" style="display: block;" class="btn btn-primary" onclick="SearchInfor();">Search</button>
+                    <button id="btnUnlockEmp" type="button" style="display:none;" class="btn btn-primary" onclick="UnlockEmp();">Unlock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/ajax/InsertInforF_ajax.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var session = '@Session["Message"]';
+        if (session != '') {
+            alert(session);
+        }
+        loadData();
+    });
+   
+</script>

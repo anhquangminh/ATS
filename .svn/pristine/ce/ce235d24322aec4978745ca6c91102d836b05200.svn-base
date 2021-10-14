@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "CreateLink";
+    Layout = "~/Areas/Link/Views/Shared/_LayoutManager.cshtml";
+}
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message"); 
+            };
+    </script>
+
+}
+<div class="container"  style="padding-left:0px;padding-right:0px;">
+    <div class="container" style="margin-top:20px;margin-bottom:20px;">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Add new link system</strong>
+                </div>
+                <div class="card-body card-block">
+                    <form method="post" action="@Url.Action("CreateLink", "Manager")" enctype="multipart/form-data" class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="select" class=" form-control-label">Department</label></div>
+                                <div class="col-12 col-md-9">
+                                    <select name="IDdp" class="form-control" autofocus>
+                                        @if (ViewBag.ErrorCategories != null)
+                                        {
+                                            foreach (var category in (ViewBag.ErrorCategories as List<WebLink.Models.DepartmentModel>))
+                                            {
+                                                <option value="@category.IDdp">@category.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">SystemName</label></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="SystemName" placeholder="SystemName" class="form-control"></div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Description</label></div>
+                                <div class="col-12 col-md-9"><textarea name="Description" id="textarea-input" rows="9" placeholder="Description..." class="form-control"></textarea></div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Email</label></div>
+                                <div class="col-12 col-md-9"><input type="email" id="text-input" name="Email" placeholder="Email ..." class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Owner</label></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="Owner" placeholder="Owner" class="form-control"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="email-input" class=" form-control-label">Contact</label></div>
+                                <div class="col-12 col-md-9"><input type="text" id="email-input" name="Contact" placeholder="Contact" class="form-control"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Link</label></div>
+                                <div class="col-12 col-md-9"><textarea name="Link" id="textarea-input" rows="9" placeholder="Link..." class="form-control"></textarea></div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 card-footer">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fa fa-dot-circle-o"></i> Submit
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <i class="fa fa-ban"></i>Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

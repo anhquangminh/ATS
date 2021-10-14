@@ -1,0 +1,328 @@
+﻿
+@{
+    ViewBag.Title = "SearchNear";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<link href="~/Assets/css/tree.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Find people stay near </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool" onClick="action();"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Find people stay near</h4></legend>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No</label>
+                                                    <input type="text" class="form-control" id="emp7day" name="emp7day">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date Start</label>
+                                                    <input type="date" class="form-control" id="timestart" name="timestart">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date End</label>
+                                                    <input type="date" class="form-control" id="timeend" name="timeend">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group" data-select2-id="40">
+                                                    <label>Select</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectsearch">
+                                                        <option value="0">Range 1 & Range 2 & Range 3</option>
+                                                        <option value="1">Range 1</option>
+                                                        <option value="2">Range 2</option>
+                                                        <option value="3">Range 3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="search7day();">
+                                                        <i class="fas fa-satellite"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchTree();">
+                                                        <i class="fal fa-analytics"></i> &nbsp;
+                                                        Search Tree
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1" style="display:none;" id="downloadsearch">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                        <i class="fas fa-cloud-download-alt"></i>&nbsp;
+                                                        Download
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbSearch">
+                                        <tbody id="tbodySearch"></tbody>
+                                    </table>
+                                </div>
+                                <hr />
+                                <div class="row" id="note_rearch" style="display:none;">
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon ff0"></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Range</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon ff1"></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Range 1</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon ff2"></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Range 2</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon ff3"></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Range 3</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="container-fluid" id="rootshow" style="display:none;">
+                                    <div class="row" style="margin-left: 2%; margin-bottom: 50px;">
+                                        <div class="tree">
+                                            <ul id="root">
+                                                <li id="rootEle">
+                                                    
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px; display:none; " id="searchone">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Searching for information about people eating </h4></legend>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group" style=" margin-top: 30px;">
+                                            <!-- Extra large modal -->
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-magnet"></i> Find</button>
+                                            <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Find out where and when to eat</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="GET">
+                                                                <div class="form-group">
+                                                                    <label for="recipient-name" class="col-form-label">Emp No:</label>
+                                                                    <input type="text" class="form-control" id="search" name="search">
+                                                                </div>
+                                                            </form>
+                                                            <div style="text-align:center;align-content:center;display:none;" id="121212">
+                                                                <div class="spinner-border" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                            <div id="dresult">
+                                                                <table id="result" class="table table-bordered table-striped">
+                                                                    <tbody id="tbody"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="SearchInfor();">Search</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No</label>
+                                                    <input type="text" class="form-control" id="empnosearch" name="empnosearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Position</label>
+                                                    <input type="text" class="form-control" id="positionsearch" name="positionsearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Time eat</label>
+                                                    <input type="text" class="form-control" id="timesearch" name="timesearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchF();">
+                                                        <i class="fas fa-satellite"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="display:none;" id="downloadexcel">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbExcel', 'Danhsachtiepxuc')">
+                                                        <i class="fas fa-comments-dollar"></i>&nbsp;
+                                                        Download Excel
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loading">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="tree">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">Parent</a>
+                                                    <ul>
+                                                        <li>
+                                                            <i class="fas fa-user ficon f0"></i><br />
+                                                            <p>V09912</p>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="#">Grand Child</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Child</a>
+                                                            <ul>
+                                                                <li><a href="#">Grand Child</a></li>
+                                                                <li>
+                                                                    <a href="#">Grand Child</a>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">Great Grand Child</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li><a href="#">Grand Child</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbExcel">
+                                        <tbody id="tbodyResult"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    function action() {
+        if (document.getElementById('searchone').style.display == 'block') {
+            document.getElementById('searchone').style.display = 'none';
+        } else {
+            document.getElementById('searchone').style.display = 'block';
+        }
+    }
+
+</script>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/test.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />

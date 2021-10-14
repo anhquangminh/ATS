@@ -1,0 +1,391 @@
+﻿
+@{
+    ViewBag.Title = "SearchHistoryCanten";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "SearchHistoryCanten";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Search History Scan QR code </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool" onClick="action();"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Search history Scan QR code/ Tra cứu lịch sử quét QR Code</legend>
+                                <div class="row">
+                                    <buton id="btnemp" class="btn-danger btn" onclick="action()">Search by EMP/ Tìm theo mã thẻ</buton>
+                                    &nbsp;
+                                    <buton id="btnbu" class="btn-default btn" onclick="action2()">Search by site/ Tìm theo địa điểm</buton>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-10" id="searchbu" style="display:none;">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date Start/ Thời gian bắt đầu</label>
+                                                    <input type="datetime-local" class="form-control" id="timestartbu" name="timestart">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date End/ Thời gian kết thúc</label>
+                                                    <input type="datetime-local" class="form-control" id="timeendbu" name="timeend">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group" data-select2-id="40">
+                                                    <label>Select/ Lựa chọn</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectbu">
+                                                        <option value="NA">Canteen/ Nhà ăn</option>
+                                                        <option value="BS">Car/ Xe</option>
+                                                        <option value="GW,HT,GZ">Dorm/ Kí túc xá</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group" data-select2-id="40">
+                                                    <label>Select Site/ Khu vực</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectsite">
+                                                        <option value="QW">QW/ Quế võ</option>
+                                                        <option value="HT">HT/ Đồng vàng</option>
+                                                        <option value="GZ">GZ/ Quang châu</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchhistoryBU();">
+                                                        <i class="fas fa-search"></i>&nbsp;
+                                                        Search/ Tìm kiếm
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10" id="searchemp">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No/ Mã thẻ</label>
+                                                    <input type="text" class="form-control" id="emp" name="emp">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date Start/ Thời gian bắt đầu </label>
+                                                    <input type="datetime-local" class="form-control" id="timestart" name="timestart">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Date End/ Thời gian kết thúc</label>
+                                                    <input type="datetime-local" class="form-control" id="timeend" name="timeend">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group" data-select2-id="40">
+                                                    <label>Select/ Lựa chọn</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="select">
+                                                        <option value="0">Canteen/ Nhà ăn</option>
+                                                        <option value="1">Car/ Xe</option>
+                                                        <option value="2">Dorm/ kí túc xá</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchhistory();">
+                                                        <i class="fas fa-search"></i>&nbsp;
+                                                        Search/ Tìm kiếm
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" style="display:none;" id="downloadsearch">
+                                        <div class="form-group">
+                                            <label for="">&nbsp;</label>
+                                            <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                <i class="fas fa-cloud-download-alt"></i>&nbsp;
+                                                Download/ Tải xuống
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbSearch">
+                                        <tbody id="tbSearch"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Assets/DataTable/multi_freezer/my.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script>
+    function exportTableToExcel(tableID, filename) {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById(tableID);
+
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+        tab_text = tab_text.replace(/<img[^>]*>/gi, "");
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, filename);
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        return (sa);
+    }
+
+    function searchhistory() {
+
+        var res = validatesearch();
+        if (res == false) {
+            return false;
+        }
+        var emp = $('#emp').val();
+        var timestart = $('#timestart').val();
+        var timeend = $('#timeend').val();
+        var select = $('#select').val();
+        if (new Date(timestart) > new Date(timeend)) {
+            alert("Time Start start time must be greater than end time !")
+            return false;
+        }
+        $('#loadingsearch').show();
+        //DEPARTMENT_NAME
+        $.ajax({
+            url: "/ATS/getHistory?emp=" + emp + "&&timestart=" + timestart + "&&timeend=" + timeend + "&&select=" + select,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    var html = '<tr class="table-dark"><td>EMP No/ Mã thẻ</td><td>Name/ Tên</td><td>Position/ Vị trí </td><td> Time/ Thười gian </td><td>Message/ Thông điệp</td></tr>';
+                    $.each(data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.empno + '</td>';
+                        html += '<td>' + item.empname + '</td>';
+                        html += '<td>' + item.position + '</td>';
+                        html += '<td>' + item.time + '</td>';
+                        if (item.ff == null) {
+                            html += '<td> OK </td>';
+                        } else {
+                            html += '<td>' + item.ff + '</td>';
+                        }
+
+                        html += '</tr>';
+                    });
+                    $('#loadingsearch').hide();
+                    $('#tbSearch').html(html);
+                    $('#result_search').show();
+                    $('#downloadsearch').show();
+                } else {
+                    var html = '';
+                    html += '<tr style="color: red;text-align: center;font-weight: bold;">';
+                    html += '<td> No result is found  !</td>';
+                    html += '</tr>';
+                    $('#loadingsearch').hide();
+                    $('#tbSearch').html(html);
+                    $('#result_search').hide();
+                    $('#downloadsearch').hide();
+                }
+
+            },
+            error: function (error) {
+                $('#loadingsearch').hide();
+                alert(error);
+            },
+        });
+    }
+
+    function searchhistoryBU() {
+        var res = validatebu();
+        if (res == false) {
+            return false;
+        }
+        var timestart = $('#timestartbu').val();
+        var timeend = $('#timeendbu').val();
+        var select = $('#selectbu').val();
+        var selectsite = $('#selectsite').val();
+        if (new Date(timestart) > new Date(timeend)) {
+            alert("Time Start start time must be greater than end time !")
+            return false;
+        }
+        $('#tbSearch').empty();
+        $('#loadingsearch').show();
+        //DEPARTMENT_NAME
+        $.ajax({
+            url: "/api/getHistorySite?timestart=" + timestart + "&&timeend=" + timeend + "&&select=" + select + "&&site=" + selectsite,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    var html = '<tr class="table-dark"><td>EMP No/ Mã thẻ</td><td>Name/ Tên</td><td>Position/ Vị trí </td><td> Time/ Thời gian </td><td>Message/ Mã thẻ</td></tr>';
+                    $.each(data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.empno + '</td>';
+                        html += '<td>' + item.empname + '</td>';
+                        html += '<td>' + item.position + '</td>';
+                        html += '<td>' + item.time + '</td>';
+                        if (item.ff == null) {
+                            html += '<td> OK </td>';
+                        } else {
+                            html += '<td>' + item.ff + '</td>';
+                        }
+                        html += '</tr>';
+                    });
+                    $('#loadingsearch').hide();
+                    $('#tbSearch').html(html);
+                    $('#result_search').show();
+                    $('#downloadsearch').show();
+                } else {
+                    var html = '';
+                    html += '<tr style="color: red;text-align: center;font-weight: bold;">';
+                    html += '<td> No result is found  !</td>';
+                    html += '</tr>';
+                    $('#loadingsearch').hide();
+                    $('#tbSearch').html(html);
+                    $('#result_search').hide();
+                    $('#downloadsearch').hide();
+                }
+
+            },
+            error: function (error) {
+                $('#loadingsearch').hide();
+                alert(error);
+            },
+        });
+    }
+
+    function validatebu() {
+        var isValid = true;
+        if ($('#timestartbu').val().trim() == "") {
+            $('#timestartbu').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#timestartbu').css('border-color', 'lightgrey');
+        }
+
+        if ($('#timeendbu').val().trim() == "") {
+            $('#timeendbu').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#timeendbu').css('border-color', 'lightgrey');
+        }
+
+        return isValid;
+    }
+    function validatesearch() {
+        var isValid = true;
+        if ($('#emp').val().trim() == "") {
+            $('#emp').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#emp').css('border-color', 'lightgrey');
+        }
+
+        if ($('#timestart').val().trim() == "") {
+            $('#timestart').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#timestart').css('border-color', 'lightgrey');
+        }
+
+        if ($('#timeend').val().trim() == "") {
+            $('#timeend').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#timeend').css('border-color', 'lightgrey');
+        }
+
+        return isValid;
+    }
+
+    function action() {
+        document.getElementById('searchemp').style.display = 'block';
+        document.getElementById('searchbu').style.display = 'none';
+        document.getElementById("btnemp").classList.add('btn-danger');
+        document.getElementById("btnemp").classList.remove('btn-default');
+        document.getElementById("btnbu").classList.add('btn-default');
+        document.getElementById("btnbu").classList.remove('btn-danger');
+    }
+    function action2() {
+        document.getElementById('searchemp').style.display = 'none';
+        document.getElementById('searchbu').style.display = 'block';
+        document.getElementById("btnbu").classList.add('btn-danger');
+        document.getElementById("btnbu").classList.remove('btn-default');
+        document.getElementById("btnemp").classList.add('btn-default');
+        document.getElementById("btnemp").classList.remove('btn-danger');
+    }
+</script>

@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "DownLoadExcel";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<br />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content">
+        <div class="card">
+            <div class="card-header bg-success "> Download file excel  </div>
+            <div class="card-body" style="background-color: aliceblue;">
+                <div class="row">
+                    @using (Html.BeginForm("DownLoadExcel", "ATS", FormMethod.Post, new { enctype = "multipart/form-data", @class = "col-12" }))
+                    {
+                        <div class="form-group">
+                            <div class="card p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Lấy dữ liệu nhiệt độ của công nhân viên </h4></legend>
+                                    <label class="control-label col-md-12 text-danger card-title">Vui lòng chọn ngày cần lấy dữ liệu nhỏ hơn ngày hiện tại :</label>
+                                    <div class="row col-12">
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12 ">Chọn ngày cần lấy dữ liệu :</label>
+                                            <input type="date" class="form-control" name="date" id="date" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Chọn thời gian cần lấy dữ liệu :</label>
+                                            <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example" name="selecttime">
+                                                <option selected value="8">Trước 8h</option>
+                                                <option value="13">8h-13h</option>
+                                                <option value="19">13h-19h</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="control-label col-md-12"> <span style="display:none">Phan lay du lieu</span> </label>
+                                            <input type="submit" class="btn-outline-primary form-control" value="Tải về dữ liệu" style="margin-top:7px;" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script type="text/javascript">
+        alert("@ViewBag.Message");
+    </script>
+}
+

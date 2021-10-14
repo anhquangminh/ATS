@@ -1,0 +1,110 @@
+﻿@model IEnumerable<WebLink.Models.DepartmentModel>
+@{
+    ViewBag.Title = "CreateDepartmet";
+    Layout = "~/Areas/Link/Views/Shared/_LayoutManager.cshtml";
+}
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+
+}
+<div class="container">
+    <form method="post" action="@Url.Action("CreateDepartment", "Manager")" enctype="multipart/form-data" class="horizontal">
+        <div class="card">
+            <div class="card-header">
+                <strong>Create Department </strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="text-input" class=" form-control-label">Department name</label></div>
+                    <div class="col-12 col-md-9"><input type="text" id="text-input" name="Name" placeholder="SystemName" class="form-control"></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Note</label></div>
+                    <div class="col-12 col-md-9"><input type="text" id="text-input" name="Note" placeholder="Note" class="form-control"></div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 card-footer">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i>Reset
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<div class="container">
+    <hr />
+    <table id="example" class=" table-bordered table-striped">
+        <thead>
+            <tr>
+                <th> STT</th>
+                <th> Name</th>
+                <th> Note</th>
+                <th> Modify</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.STT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditDepartment", new { id = item.IDdp }, new { onclick = "return confirm('Are you sure edit ? System : " + item.Name + "');" }) |
+                    @Html.ActionLink("Delete", "DeleteDepartment", new { id = item.IDdp }, new { onclick = "return confirm('Are you sure delete ? System:" + item.Name + " ');" })
+                </td>
+            </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>STT</th>
+                <th>Name</th>
+                <th>Note</th>
+                
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+</script>
+

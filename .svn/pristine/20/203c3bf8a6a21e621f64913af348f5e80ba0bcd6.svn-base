@@ -1,0 +1,429 @@
+﻿
+@{
+    ViewBag.Title = "ConfigCanten";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+<style type="text/css">
+    .table {
+        border: 0px;
+    }
+
+    td {
+        border: 0px;
+    }
+
+    table > tbody > tr > td {
+        border: 0px;
+    }
+
+    table > tfoot > tr > th > select {
+        max-width: 80px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .content-header {
+        padding: 5px .5rem;
+    }
+
+    .canvasjs-chart-toolbar {
+        display: none;
+    }
+
+    .button {
+        background-color: #004A7F;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        border: none;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: Arial;
+        font-size: 20px;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    table thead {
+        background-color: #4a5a5482;
+    }
+
+    table th, td {
+        white-space: nowrap;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Config postion canten </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-cog"></i> &nbsp; Set up the canteen location</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Set up the canteen location  </h4></legend>
+                                <div class="row">
+                                    <span class="text-danger">&nbsp; Note that if there are many Range 1, Range 2, Range 3 they are separated by a sign " , "</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group" data-select2-id="40">
+                                            <label>Area</label>
+                                            <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="area">
+                                                <option value="NA-QW-B09-1F">NA-QW-B09-1F</option>
+                                                <option value="NA-QW-B11-1F">NA-QW-B11-1F</option>
+                                                <option value="NA-QW-C-2F">NA-QW-C-2F</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="">Position</label>
+                                            <input type="text" class="form-control" id="position" placeholder="01-01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="">Range 1</label>
+                                            <input type="text" class="form-control" id="f1" placeholder="02-01,02-02">
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-2" >
+                                        <div class="form-group">
+                                            <label for="">Range 2</label>
+                                            <input type="text" class="form-control" id="f2" placeholder="01-02,02-01,02-02">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="">Range 3</label>
+                                            <input type="text" class="form-control" id="f3" placeholder="01-02,02-01,02-02">
+                                        </div>
+                                    </div>*@
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label for="">&nbsp;</label>
+                                            <button type="button" class="form-control btn btn-primary" onclick="Add();">
+                                                <i class="fas fa-user-plus"></i>&nbsp;
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class=" table-responsive">
+                        @if (ViewBag.Data != null)
+                        {
+                            <table class="table table-responsive-md table-bordered table-striped table-hover" id="table_canten" style="width:100%; border-collapse: collapse;font-family: arial; font-size:13px;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Position</th>
+                                        <th>Type</th>
+                                        <th>User config</th>
+                                        <th>Time config</th>
+                                        @*<th>Time edit</th>*@
+                                        <th>IP</th>
+                                        <th>NoteID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.Data)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center"><a href="#" onclick="return GetbyIDCanten('@item.id')"><i class="fas fa-edit"></i></td>
+                                            <td style="text-align:center"><a href="#" onclick="DeleteCanten('@item.id','@item.id')"><i class="far fa-trash-alt"></i></td>
+                                            <td>@item.position</td>
+                                            <td>@item.type</td>
+                                            <td>@item.user_config</td>
+                                            <td>@item.time_config</td>
+                                            @*<td>@item.time_edit</td>*@
+                                            <td>@item.ip</td>
+                                            <td>@item.NoteID</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        @*<th></th>*@
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" hidden>
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><i class="nav-icon fas fa-search"></i> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Find people stay near</h4></legend>
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No</label>
+                                                    <input type="text" class="form-control" id="emp7day" name="emp7day">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Date Start</label>
+                                                    <input type="date" class="form-control" id="timestart" name="timestart">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Date End</label>
+                                                    <input type="date" class="form-control" id="timeend" name="timeend">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="search7day();">
+                                                        <i class="fas fa-satellite"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="display:none;" id="downloadsearch">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                        <i class="fas fa-comments-dollar"></i>&nbsp;
+                                                        Download file excel
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbSearch">
+                                        <tbody id="tbodySearch"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px; " hidden>
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;"><h4>Searching for information about people eating </h4></legend>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group" style=" margin-top: 30px;">
+                                            <!-- Extra large modal -->
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-magnet"></i> Find</button>
+                                            <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Find out where and when to eat</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="GET">
+                                                                <div class="form-group">
+                                                                    <label for="recipient-name" class="col-form-label">Emp No:</label>
+                                                                    <input type="text" class="form-control" id="search" name="search">
+                                                                </div>
+                                                            </form>
+                                                            <div style="text-align:center;align-content:center;display:none;" id="121212">
+                                                                <div class="spinner-border" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                            <div id="dresult">
+                                                                <table id="result" class="table table-bordered table-striped">
+                                                                    <tbody id="tbody"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="SearchInfor();">Search</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Emp No</label>
+                                                    <input type="text" class="form-control" id="empnosearch" name="empnosearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Position</label>
+                                                    <input type="text" class="form-control" id="positionsearch" name="positionsearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="">Time eat</label>
+                                                    <input type="text" class="form-control" id="timesearch" name="timesearch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchF();">
+                                                        <i class="fas fa-satellite"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="display:none;" id="downloadexcel">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbExcel', 'Danhsachtiepxuc')">
+                                                        <i class="fas fa-comments-dollar"></i>&nbsp;
+                                                        Download Excel
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loading">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row" id="result_search">
+                                    <table class="table table-bordered table-striped" id="tbExcel">
+                                        <tbody id="tbodyResult"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@*View edit*@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card card-blue" style="margin:0px">
+                <div class="card-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit infor position </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="row col-12">
+                        <input type="text" name="id" id="id" hidden />
+                        <div class="form-group col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-inbox"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="position" name="position" id="position1">
+                            </div>
+                        </div>
+                        <div class="form-group col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="type" name="type" id="type1">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer" style="align-content:center;text-align:center;">
+                    <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="UpdateCanten();">Save</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/canten_ajax.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+

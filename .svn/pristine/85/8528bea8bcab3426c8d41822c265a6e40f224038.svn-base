@@ -1,0 +1,587 @@
+﻿@model IEnumerable<ATS_AlarmTrackingSystem.Models.Message>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<link href="~/Assets/css/animation_icon.css" rel="stylesheet" />
+<style type="text/css">
+    .table {
+        border: 0px;
+    }
+
+    td {
+        border: 0px;
+    }
+
+    table > tbody > tr > td {
+        border: 0px;
+    }
+
+    table > tfoot > tr > th > select {
+        max-width: 80px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .content-header {
+        padding: 5px .5rem;
+    }
+
+    .canvasjs-chart-toolbar {
+        display: none;
+    }
+
+    .button {
+        background-color: #004A7F;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        border: none;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: Arial;
+        font-size: 20px;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    table thead {
+        background-color: #4a5a5482;
+    }
+</style>
+<link href="~/Assets/css/test.css" rel="stylesheet" />
+<link href="~/Assets/css/chat.css" rel="stylesheet" />
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">ATS_Alarm system tracking</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-gradient-orange"><i class="far fa-bookmark"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Issue Open</span>
+                            <span class="info-box-number">41,410</span>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="progress-description">
+                                70% Increase in 30 Days
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-gradient-indigo"><i class="far fa-flag"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Issue pending</span>
+                            <span class="info-box-number">41,410</span>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="progress-description">
+                                70% Increase in 30 Days
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-gradient-olive"><i class="far fa-calendar-alt"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Issue Close</span>
+                            <span class="info-box-number">41,410</span>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="progress-description">
+                                70% Increase in 30 Days
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box" onclick="gotoMore_infor()">
+                        <span class="info-box-icon bg-info"><i class="fas fa-arrow-alt-circle-down"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">More infor</span>
+                            <span class="info-box-number">41,410</span>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="progress-description">
+                                70% Increase in 30 Days
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!--row chart -->
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- AREA CHART -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Area Chart</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <!-- /.col (LEFT) -->
+                <div class="col-md-6">
+                    <!-- LINE CHART -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Line Chart</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <div id="piechart" style="height: 370px; width: 100%;"></div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card" id="more_infor">
+                        <div class="card-header" style="background-color: #1686ff; color: white;">
+                            <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i> Issue pending</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-wrap:break-word">
+                            <div class="tab-content p-0">
+                                <table class="table table-bordered table-responsive table-hover" id="table_message" style="border-collapse: collapse;font-family: arial;">
+                                    <thead>
+                                        <tr>
+                                            <th>Ip address</th>
+                                            <th>Owner emp</th>
+                                            <th>Owner name</th>
+                                            <th>Building</th>
+                                            <th>Team</th>
+                                            <th>Emp user</th>
+                                            <th>Level user</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th>Time Start</th>
+                                            <th>Time OnGoing</th>
+                                            <th>Time End</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ip_address)
+                                                </td>
+                                                <td style="text-align:center; align-content: center; margin: auto; height: 80px; position: relative; min-width:80px;">
+                                                    @if (string.IsNullOrEmpty(item.owner_emp))
+                                                    {
+                                                        <div class="phonering-alo-phone phonering-alo-green phonering-alo-show" id="phonering-alo-phoneIcon">
+                                                            <div class="phonering-alo-ph-circle" title="Receiving and handling">
+                                                            </div>
+                                                            <div class="phonering-alo-ph-circle-fill" title="Receiving and handling">
+                                                            </div>
+                                                            <div class="phonering-alo-ph-img-circle" title="Receiving and handling" onClick="return action('@item.id_ats')">
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.owner_emp)
+                                                    }
+                                                </td>
+                                                <td style="text-align:center">
+                                                    @if (string.IsNullOrEmpty(item.owner_name))
+                                                    {
+                                                        <i style="background-color:aliceblue;font-size: 16px;" class="fas fa-2x fa-sync-alt fa-spin"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.owner_name)
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.building)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.team)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.emp_user)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.level_user)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.description)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.status)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.time_start)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.time_going)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.time_end)
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Ip address</th>
+                                            <th>Owner emp</th>
+                                            <th>Owner name</th>
+                                            <th>Building</th>
+                                            <th>Team</th>
+                                            <th>Emp user</th>
+                                            <th>Level user</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th>Time Start</th>
+                                            <th>Time OnGoing</th>
+                                            <th>Time End</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">Add Issue</button><br /><br />
+                            </div>
+                        </div><!-- /.card-body -->
+
+                    </div>
+                </section>
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+    <!-- /.content -->
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card card-blue" style="margin:0px;">
+                <div class="card-header">
+                    <button style="color:white" type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Add new issue</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Ip Address</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="ip_address" id="ip_address">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label> Building </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-address-book"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="building" id="building">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Team :</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                            </div>
+                            <select class="custom-select rounded-0" id="team" name="team">
+                                <option value="SFIS" selected>SFIS</option>
+                                <option value="NETWORK">NETWORK</option>
+                                <option value="ALLPART">ALLPART</option>
+                                <option value="APP">APP</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Emp user:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="emp_user" id="emp_user">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-align-justify"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="description" id="description">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" id="btnAdd" onclick="return Add();">Add</button>
+                    &emsp;
+                    &emsp;
+                    &emsp;
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fabs">
+    <div class="chat">
+        <div class="chat_header">
+            <div class="chat_option">
+                <div class="header_img">
+                    <img src="~/Assets/Image/4961736.png" />
+                </div>
+                <span id="chat_head">Chat Message</span> <br> <span class="agent">IT</span> <span class="online">(Support)</span>
+                <span id="chat_fullscreen_loader" class="chat_fullscreen_loader"><i class="fullscreen zmdi zmdi-window-maximize"></i></span>
+            </div>
+        </div>
+        <div id="chat_fullscreen" class="chat_conversion chat_converse">
+            <div class="form-group">
+                <span class="chat_msg_item chat_msg_item_admin">
+                    <div class="chat_avatar">
+                        <img src="~/Assets/Image/chatbot2.png" />
+                    </div>
+                    <div class="chat-content">
+                        <h6 class="name_massage">10.224.41.128</h6>
+                        <span class="conten_message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+                    </div>
+                </span>
+                <p class="date_massage1">2021/07/24 14:22:05</p>
+            </div>
+            <div class="form-group">
+                <span class="chat_msg_item chat_msg_item_user">
+                    There are many variations of passages of Lorem Ipsum available
+                </span>
+                <p class="date_massage2">2021/07/24 14:22:05</p>
+            </div>
+            <p id="scroll_end" class="status">dsad</p>
+        </div>
+        <div class="fab_field">
+            @*<a id="fab_send" class="fab"><i class="fas fa-paper-plane"></i></a>*@
+            <button id="fab_send" class="fab" style="border:none; background-color:antiquewhite;"><i class="fas fa-paper-plane" style="color:#2519d8"></i></button>
+            <textarea id="chatSend" name="chat_message" placeholder="Send a message" class="chat_field chat_message"></textarea>
+        </div>
+    </div>
+    <a id="prime" class="fab"><i class="fab fa-facebook-messenger"></i></a>
+</div>
+
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/index_ajax.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+@*<script src="~/Assets/js/chartjs/jquery-1.11.1.min.js"></script>*@
+<script src="~/Assets/js/chartjs/jquery.canvasjs.min.js"></script>
+<script src="~/Scripts/ajax/chat.js"></script>
+<script>
+    $(document).ready(function () {
+        getchart();
+    });
+    function getchart() {
+        $.get("/ATS/json/", function (data) {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",//light1
+                title: {
+                    text: "Issu by owner"
+                },
+                data: [
+                    {
+                        // Change type to "bar", "splineArea", "area", "spline", "pie",etc.
+                        type: "line",
+                        dataPoints: data,
+                    }
+                ]
+            });
+            chart.render();
+        });
+
+        $.get("/ATS/json1/", function (data) {
+            var chartPie = new CanvasJS.Chart("piechart", {
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Owner percent ",
+                    fontSize: 21
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 160,
+                    toolTipContent: "<b>{label}</b>: {y}%",
+                    indexLabel: "{label} - {y}%",
+                    dataPoints: data,
+                }]
+            });
+            chartPie.render();
+        });
+
+        setTimeout(getchart, 30000);
+    }
+
+    //window.onload = function () {
+    @*var chartLine = new CanvasJS.Chart("chartContainer", {
+	    animationEnabled: true,
+	    theme: "light1", // "light1", "dark1", "dark2"
+	    exportEnabled: true,
+	    title: {
+		    text: "Issu by owner"
+	    },
+	    data: [{
+		    type: "column",
+		    dataPoints:  @Html.Raw(ViewBag.DataPoints)
+	    }]
+    });
+    chartLine.render();*@
+//}
+</script>
+
+
+<script type="text/javascript">
+    function action(id_ats) {
+        var ans = confirm("Are you sure you want receiving and handling ?");
+        var owner_emp = $('#owner_emp').text();
+        var owner_name = $('#owner_name').text();
+        if (ans) {
+            $.ajax({
+                url: "../../api/updateOwner?id_ats=" + id_ats + "&owner_emp=" + owner_emp + "&owner_name=" + owner_name,
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
+
+    $(document).ready(function () {
+        $('#table_message').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        const string = d;
+                        const substring = "class=";
+                        if (string.includes(substring) == true) {
+
+                        } else {
+                            select.append('<option value="' + d + '">' + d + '</option>');
+                        }
+
+                    });
+                });
+            }
+        });
+    });
+
+    //start scroll tới table
+    function goToByScroll(id) {
+        $('html,body').animate({
+            scrollTop: $("#" + id).offset().top
+        }, 'slow');
+    }
+
+    function gotoMore_infor() {
+        goToByScroll("more_infor");
+    }
+    //end scroll tới table
+
+
+</script>

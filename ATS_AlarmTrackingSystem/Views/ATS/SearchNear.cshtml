@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "SearchNear";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<link href="~/Assets/css/tree.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Find people stay near </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool" onClick="action();"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Find people stay near</legend>
+                                <div class="row">
+                                    <div class="row col-12">
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Emp No/ Mã thẻ</label>
+                                                <input type="text" class="form-control" id="emp" name="emp" placeholder="V0979820">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="timestart">Date start/ Ngày bắt đầu</label>
+                                                <input type="date" class="form-control" id="timestart" name="timestart">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="timestart">Date end/ Ngày kết thúc</label>
+                                                <input type="date" class="form-control" id="timeend" name="timeend">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group" data-select2-id="1">
+                                                <label for="selectaround">Around time/ Khoảng thời gian</label>
+                                                <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectaround">
+                                                    <option value="10">10 mins</option>
+                                                    <option value="15">15 mins</option>
+                                                    <option value="20">20 mins</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="button" class="form-control btn btn-primary" onclick="SearchTime();">
+                                                    <i class="fas fa-search"></i>&nbsp;
+                                                    Search/ Tìm kiếm
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" style="display:none;" id="downloadsearch">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                    <i class="fas fa-cloud-download-alt"></i>&nbsp;
+                                                    Download/ Tải xuống
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row table-responsive">
+                                    <table id="tbSearch" class="table table-bordered border-primary">
+                                        <tbody id="tbodySearch"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                            <br />
+                            <div class="form-group result" id="nodata" style="display:none;">
+                                <div class="col-md-12 message-area">
+                                    <i class="fas fa-warning fa-bullhorn"></i>&nbsp;&nbsp; <span id="message">No search results . &nbsp;&nbsp;&nbsp;&nbsp;Không tìm thấy kết quả nào.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/searchNear.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+

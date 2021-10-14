@@ -1,0 +1,1802 @@
+﻿using ATS_AlarmTrackingSystem.Models;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using WebLink.Models;
+
+namespace ATS_AlarmTrackingSystem.Controllers
+{
+    public class ATSController : Controller
+    {
+        // infor ATS
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(string UserName, string Password, string OTP)
+        {
+            //if (!string.IsNullOrEmpty(OTP))
+            //{
+            //    string result = CheckOPT(OTP, UserName);
+            //    if (result == "0")
+            //    {
+            getAcount accList = new getAcount();
+            List<AccountModel> data;
+            if (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password))
+            {
+                data = accList.listAcount(UserName, Password).ToList();
+                if (data.Count() > 0)
+                {
+                    //add session
+                    Session["IDAcount"] = data.FirstOrDefault().IDAcount;
+                    Session["UserName"] = data.FirstOrDefault().UserName;
+                    Session["PublicName"] = data.FirstOrDefault().PublicName;
+                    Session["Password"] = data.FirstOrDefault().Password;
+                    Session["Level"] = data.FirstOrDefault().Level;
+
+                    return RedirectToAction("Index", "ATS");
+
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Wrong username or password ";
+                    return View("Login");
+                }
+
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "User name or password is empty !";
+            }
+            //    }
+            //    else
+            //    {
+            //        string message = "";
+            //        switch (result)
+            //        {
+            //            case "-1":
+            //                message = "??????(????)";
+            //                break;
+            //            case "-2":
+            //                message = "OpenId(????)";
+            //                break;
+            //            case "-3":
+            //                message = "????(?????Token)";
+            //                break;
+            //            case "-4":
+            //                message = "Token????(???????)";
+            //                break;
+            //            case "-5":
+            //                message = "Token??(??Token??)";
+            //                break;
+            //            case "-6":
+            //                message = "Token??";
+            //                break;
+            //            case "-7":
+            //                message = "?systemName????????token (??systemPrivilege??????)";
+            //                break;
+            //            case "-8":
+            //                message = "????Token(??????Token)";
+            //                break;
+            //            case "-9":
+            //                message = "????????";
+            //                break;
+            //            case "-10":
+            //                message = "???????(SystemPrivilege)";
+            //                break;
+            //            case "-11":
+            //                message = "????????Token??(systemUserInfo???)";
+            //                break;
+            //            case "-12":
+            //                message = "????????Token??(systemUserInfo? status=0)";
+            //                break;
+            //            case "-13":
+            //                message = "???token??";
+            //                break;
+            //            case "-20":
+            //                message = "???";
+            //                break;
+            //            case "-100":
+            //                message = "????";
+            //                break;
+
+            //        }
+            //        ViewBag.ErrorMessage = message;
+            //    }
+            //}
+            //else
+            //{
+            //    ViewBag.ErrorMessage = "Please enter OTP Icivet ";
+            //}
+
+            return View();
+
+        }
+        public static string CheckOPT(string OPT, string account)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://civetinterface.foxconn.com/FxTokenWeb/api/Validate/");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "PUT";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{\"appid\":\"2XA5CKB9d.hjpf1qNhznJA2\",\"password\":\"Foxconn0517\",\"account\" :\"" + account + "\",\"token\":\"" + OPT + "\",\"type\":0}";
+
+                streamWriter.Write(json);
+            }
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var responseText = streamReader.ReadToEnd();
+                dynamic stuff = JsonConvert.DeserializeObject(responseText);
+
+                string result = stuff.result;
+
+                return result;
+            }
+        }
+        public ActionResult Logout()
+        {
+            Session.Clear();//remove session
+            return RedirectToAction("index");
+        }
+        public ActionResult Index()
+        {
+
+            List<DataPoint> dataPoints = new List<DataPoint>();
+
+            dataPoints.Add(new DataPoint("V0944125", 121));
+            dataPoints.Add(new DataPoint("V0943312", 67));
+            dataPoints.Add(new DataPoint("V0954254", 70));
+            dataPoints.Add(new DataPoint("V0984552", 56));
+            dataPoints.Add(new DataPoint("V0985517", 42));
+            dataPoints.Add(new DataPoint("V0985521", 41));
+            dataPoints.Add(new DataPoint("V0365421", 42));
+            dataPoints.Add(new DataPoint("V0998424", 21));
+
+            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+
+            getAllMessage getAll = new getAllMessage();
+            return View(getAll.listATS("level"));
+        }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
+        public ActionResult MealTrace()
+        {
+            return View();
+        }
+
+        public ContentResult JSON()
+        {
+            double count = 20, y = 10;
+
+            Random random = new Random(DateTime.Now.Millisecond);
+
+            List<DataPoint> dataPoints;
+
+            dataPoints = new List<DataPoint>();
+
+            for (int i = 0; i < count; i++)
+            {
+                y = y + (random.Next(0, 20) - 10);
+
+                dataPoints.Add(new DataPoint("V099129" + i.ToString(), y));
+            }
+
+            JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+
+            return Content(JsonConvert.SerializeObject(dataPoints, _jsonSetting), "application/json");
+        }
+        public ContentResult JSON1()
+        {
+            List<DataPoint> dataPoints = new List<DataPoint>();
+
+            dataPoints.Add(new DataPoint("V0944125", 121));
+            dataPoints.Add(new DataPoint("V0943312", 67));
+            dataPoints.Add(new DataPoint("V0954254", 70));
+            dataPoints.Add(new DataPoint("V0984552", 56));
+            dataPoints.Add(new DataPoint("V0985517", 42));
+            dataPoints.Add(new DataPoint("V0985521", 41));
+            dataPoints.Add(new DataPoint("V0365421", 42));
+            dataPoints.Add(new DataPoint("V0998424", 21));
+            JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+            return Content(JsonConvert.SerializeObject(dataPoints, _jsonSetting), "application/json");
+
+        }
+        // infor ATS
+        public ActionResult Network(string USERNAME)
+        {
+            GetInforPC infPC = new GetInforPC();
+            USERNAME = "10.224.41.152";
+            List<PCIssue> list = new List<PCIssue>();
+            if (!string.IsNullOrEmpty(USERNAME))
+            {
+                USERNAME = USERNAME.Replace(".", "-");
+                PCIssue pcissue = new PCIssue();
+                pcissue.USERNAME = USERNAME.Trim();
+                pcissue.SYSTEM = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='SYSTEM' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.Port1433 = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='1433' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.Port445 = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='445' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.Port3389 = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='3389' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.USB = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='USB' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.USBPROTECT = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='USBPROTECT' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.SYMANTECTUPDATE = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='SYMANTECTUPDATE' ORDER BY INPUT_DATE DESC", "IPS");
+                pcissue.VIRUS_PROTECTION = infPC.GetQuery(" USERNAME='" + USERNAME + "' and hr ='VIRUS_PROTECTION' ORDER BY INPUT_DATE DESC", "IPS");
+                list.Add(pcissue);
+            }
+
+            return View(list);
+        }
+
+        //Giao di?n config owner theo x??ng cho CRC
+        excuteCRC extCRC = new excuteCRC();
+        public ActionResult ConfigOwner()
+        {
+
+            return View();
+        }
+        public JsonResult ListOwner()
+        {
+            return Json(extCRC.getOwnerDepart(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AddOwner(OwnerDepart ownerDepart)
+        {
+            WebServiceInfor.PostmanService serviceInfor = new WebServiceInfor.PostmanService();
+            DataTable data = new DataTable();
+            data = serviceInfor.GetEmpInfomation(ownerDepart.emp);
+            string name_cn = data.Rows[0]["USER_NAME"].ToString();
+            if (data.Rows.Count > 0)
+            {
+                List<OwnerDepart> owner = new List<OwnerDepart>();
+                owner = extCRC.getOwnerByEMP(ownerDepart.emp);
+                if (owner.Count <= 0)
+                {
+                    string query = "insert into Owner_Depart (emp,name_cn,name_vn,building,team) values";
+                    query += "(N'" + ownerDepart.emp + "',N'" + name_cn + "',N'" + ownerDepart.name_vn + "',N'" + ownerDepart.building + "',N'" + ownerDepart.team + "')";
+                    if (extCRC.Execute(query))
+                    {
+                        return Json("Add succes !", JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json("Erro query !", JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                else
+                {
+                    return Json("Emp already exist! ");
+                }
+
+            }
+            else
+            {
+                return Json("Emp erro ");
+            }
+
+
+        }
+        public JsonResult GetbyOwnerID(string emp)
+        {
+            return Json(extCRC.getOwnerByEMP(emp), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateOwner(OwnerDepart ownerDepart)
+        {
+            WebServiceInfor.PostmanService serviceInfor = new WebServiceInfor.PostmanService();
+            DataTable data = serviceInfor.GetEmpInfomation(ownerDepart.emp);
+            string name_cn = data.Rows[0]["USER_NAME"].ToString();
+            string query = "update Owner_Depart set emp=N'" + ownerDepart.emp + "',name_vn=N'" + ownerDepart.name_vn + "',building=N'" + ownerDepart.building + "',team=N'" + ownerDepart.team + "' where emp='" + ownerDepart.emp + "'";
+            if (extCRC.Execute(query))
+            {
+                return Json("Update succes", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Erro query ", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public JsonResult Delete(string emp)
+        {
+            string query = "Delete Owner_Depart where emp='" + emp + "'";
+            return Json(extCRC.Execute(query), JsonRequestBehavior.AllowGet);
+        }
+        //Giao di?n config owner theo x??ng cho CRC
+
+        // upload g?i package window os
+        WindowOShelper oshelper = new WindowOShelper();
+        [SessionCheck]
+        public ActionResult WindowOS()
+        {
+            return View();
+        }
+        [SessionCheck]
+        [HttpPost]
+        public ActionResult WindowOS(HttpPostedFileBase file)
+        {
+            DateTime dateTimeC = DateTime.Now;
+            string nameU = "";
+            string filePath = string.Empty;
+            if (file != null)
+            {
+                string path = Server.MapPath("~/Uploads/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath = path + Path.GetFileName(file.FileName);
+                string extension = Path.GetExtension(file.FileName);
+                file.SaveAs(filePath);
+
+                string fileN = nameU + "_" + file.FileName;
+                string conString = string.Empty;
+                switch (extension)
+                {
+                    case ".xls": //Excel 97-03.
+                        conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                    case ".xlsx": //Excel 07 and above.
+                        conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                }
+
+                DataTable dt = new DataTable();
+                conString = string.Format(conString, filePath);
+                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                {
+                    using (OleDbCommand cmdExcel = new OleDbCommand())
+                    {
+                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        {
+                            cmdExcel.Connection = connExcel;
+
+                            //Get the name of First Sheet.
+                            connExcel.Open();
+                            DataTable dtExcelSchema;
+                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                            odaExcel.SelectCommand = cmdExcel;
+                            odaExcel.Fill(dt);
+                            connExcel.Close();
+                        }
+                    }
+                }
+
+                conString = @"Data Source=10.224.81.131,3000;Initial Catalog=findip;Persist Security Info=True;User ID=sa;Password=foxconn168!!";
+                using (SqlConnection con = new SqlConnection(conString))
+                {
+                    string mathe = "";
+                    try
+                    {
+                        string Owner = ""; string Package = ""; string WindowOS = ""; string MSrelease = ""; string ITrelease = "";
+                        string Inputdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                        int count = 0;
+                        if (dt.Rows.Count > 0)
+                        {
+                            con.Open();
+                            for (int i = 0; i < dt.Rows.Count; i++)
+                            {
+                                Owner = dt.Rows[i][0].ToString().Trim();
+                                Package = dt.Rows[i][1].ToString().Trim();
+                                WindowOS = dt.Rows[i][2].ToString().Trim();
+                                MSrelease = dt.Rows[i][3].ToString().Trim();
+                                ITrelease = dt.Rows[i][4].ToString().Trim();
+                                string str = MSrelease.Replace("/", "-");
+                                string a = str.Split(' ')[0];
+                                string str1 = ITrelease.Replace("/", "-");
+                                string b = str1.Split(' ')[0];
+
+
+                                if (!string.IsNullOrEmpty(MSrelease))
+                                {
+                                    DateTime dMSrelease = DateTime.ParseExact(a, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                                    DateTime dITrelease = DateTime.ParseExact(b, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                                    int mm = dMSrelease.Month;
+                                    int month = DateTime.Now.Month - 1;
+                                    //if (mm == month)
+                                    //{
+                                    count++;
+                                    string query = "insert into PackagePublic_date(owner,package,windowversion,MS_Release,IT_improve_Date,input_date) values  ";
+                                    query += "(N'" + Owner + "',N'" + Package + "',N'" + WindowOS + "',N'" + dMSrelease + "',N'" + dITrelease + "','" + Inputdate + "')";
+
+                                    using (SqlCommand cmd = new SqlCommand(query, con))
+                                    {
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    //}
+                                    //else
+                                    //{
+                                    //    ViewBag.Message = " Date row MSrelease in month " + month;
+                                    //}
+                                }
+                                else
+                                {
+                                    ViewBag.Message = " Date row MSrelease null";
+                                }
+
+                            }
+                            con.Close();
+                            if (count > 0)
+                            {
+                                ViewBag.Message = "Insert " + count + " rows in datable";
+                            }
+
+                        }
+                        string ipIm = getIPCom();
+
+                        if (con.State != ConnectionState.Closed) con.Close();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.Message = "Import data fail " + ex.Message;
+                    }
+                }
+            }
+            return View();
+        }
+
+        public JsonResult JsonWindowOS()
+        {
+            return Json(oshelper.getListWindowOS(null), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult DeleteOS(string id)
+        {
+            string query = "Delete PackagePublic_date where package='" + id.Trim() + "'";
+            return Json(oshelper.Execute(query), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetOSID(string id)
+        {
+            return Json(oshelper.getListWindowOS(id), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateOS(WIndowOS os)
+        {
+            string query = "update PackagePublic_date set owner=N'" + os.Owner + "',package=N'" + os.Package + "',windowversion=N'" + os.WindowOS + "',MS_Release=N'" + os.MSrelease + "'";
+            query += ",IT_improve_Date=N'" + os.ITrelease + "' where Package='" + os.Input_date + "'";
+            if (oshelper.Execute(query))
+            {
+                return Json("Update succes", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Erro query ", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        // upload g?i package window os
+
+        //t?i l?n file excel th?ng tin cho GA
+        KTXhelper helper = new KTXhelper();
+        public ActionResult ExcelGA()
+        {
+            ViewBag.Data = helper.getListGA();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ExcelGA(HttpPostedFileBase file)
+        {
+            DateTime dateTimeC = DateTime.Now;
+
+            string nameU = "";
+            string filePath = string.Empty;
+            if (file != null)
+            {
+                string path = Server.MapPath("~/Uploads/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath = path + Path.GetFileName(file.FileName);
+                string extension = Path.GetExtension(file.FileName);
+                file.SaveAs(filePath);
+
+                string fileN = nameU + "_" + file.FileName;
+
+                string conString = string.Empty;
+
+                switch (extension)
+                {
+                    case ".xls": //Excel 97-03.
+                        conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                    case ".xlsx": //Excel 07 and above.
+                        conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                }
+
+                DataTable dt = new DataTable();
+                conString = string.Format(conString, filePath);
+
+                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                {
+                    using (OleDbCommand cmdExcel = new OleDbCommand())
+                    {
+                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        {
+                            cmdExcel.Connection = connExcel;
+
+                            //Get the name of First Sheet.
+                            connExcel.Open();
+                            DataTable dtExcelSchema;
+                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                            odaExcel.SelectCommand = cmdExcel;
+                            odaExcel.Fill(dt);
+                            connExcel.Close();
+                        }
+                    }
+                }
+
+
+                List<KTX> ListKTX = new List<KTX>();
+
+                int count = 0;
+                string inputDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        count++;
+                        KTX ktx = new KTX();
+                        ktx.mathe = dt.Rows[i][1].ToString().Trim();
+                        ktx.hoten = dt.Rows[i][2].ToString().Trim();
+                        ktx.hotentq = dt.Rows[i][3].ToString().Trim();
+                        ktx.phapnhan = dt.Rows[i][4].ToString().Trim();
+                        ktx.khuxuong = dt.Rows[i][5].ToString().Trim();
+                        ktx.bu = dt.Rows[i][6].ToString().Trim();
+                        ktx.cft = dt.Rows[i][7].ToString().Trim();
+                        ktx.toanha = dt.Rows[i][8].ToString().Trim();
+                        ktx.bophan = dt.Rows[i][9].ToString().Trim();
+                        ktx.ngayvaoxuong = dt.Rows[i][10].ToString().Trim();
+                        ktx.phancap = dt.Rows[i][11].ToString().Trim();
+                        ktx.capbac = dt.Rows[i][12].ToString().Trim();
+                        ktx.gioitinh = dt.Rows[i][13].ToString().Trim();
+                        ktx.machiphi = dt.Rows[i][14].ToString().Trim();
+                        ktx.ngaysinh = dt.Rows[i][15].ToString().Trim();
+                        ktx.cmt = dt.Rows[i][16].ToString().Trim();
+                        ktx.ngayvaoKTX = dt.Rows[i][17].ToString().Trim();
+                        ktx.ngayraKTX = dt.Rows[i][18].ToString().Trim();
+                        ktx.quequan = dt.Rows[i][19].ToString().Trim();
+                        ktx.toaKTX = dt.Rows[i][20].ToString().Trim();
+                        ktx.sophong = dt.Rows[i][21].ToString().Trim();
+                        ktx.sogiuong = dt.Rows[i][22].ToString().Trim();
+                        ktx.ghichu = dt.Rows[i][23].ToString().Trim();
+                        ktx.nguoitailen = dt.Rows[i][24].ToString().Trim();
+                        ktx.thoigiantai = inputDate;
+
+                        ListKTX.Add(ktx);
+                        string query = "insert into [dbo].[KTX](mathe,hoten,hotentq,phapnhan,khuxuong,bu,cft,toanha,bophan,ngayvaoxuong,phancap,capbac,gioitinh,machiphi,ngaysinh,cmt,ngayvaoKTX,ngayraKTX,quequan,toaKTX,sophong,sogiuong,ghichu,nguoitailen,thoigiantai)";
+                        query += "  values ";
+                        query += "(N'" + ktx.mathe + "',N'" + ktx.hoten + "', N'" + ktx.hotentq + "',N'" + ktx.phapnhan + "',N'" + ktx.khuxuong + "',N'" + ktx.bu + "',N'" + ktx.cft + "',N'" + ktx.toanha + "',N'" + ktx.bophan + "',N'" + ktx.ngayvaoxuong + "',N'" + ktx.phancap + "',N'" + ktx.capbac + "',";
+                        query += "N'" + ktx.gioitinh + "',N'" + ktx.machiphi + "',N'" + ktx.ngaysinh + "',N'" + ktx.cmt + "',N'" + ktx.ngayvaoKTX + "',N'" + ktx.ngayraKTX + "',N'" + ktx.quequan + "',N'" + ktx.toaKTX + "',N'" + ktx.sophong + "',N'" + ktx.sogiuong + "',N'" + ktx.ghichu + "',N'" + ktx.nguoitailen + "','" + inputDate + "')";
+
+                        helper.Execute(query);
+
+                    }
+
+                }
+                else
+                {
+                    ViewBag.Message = "Khong co du lieu";
+                }
+
+                if (ListKTX != null)
+                {
+                    ViewBag.Data = ListKTX;
+                }
+            }
+            else
+            {
+                ViewBag.Message = "File khong co du lieu";
+            }
+
+            return RedirectToAction("ExcelGA");
+        }
+
+        public JsonResult JsonGA()
+        {
+            return Json(helper.getListGA(), JsonRequestBehavior.AllowGet);
+
+        }
+        public JsonResult GetbyID(string id)
+        {
+            return Json(helper.getByID(id), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateGA(KTX ktx)
+        {
+
+            string query = "update KTX set mathe=N'" + ktx.mathe + "',hoten=N'" + ktx.hoten + "',hotentq=N'" + ktx.hotentq + "',phapnhan=N'" + ktx.phapnhan + "'";
+            query += ",khuxuong=N'" + ktx.khuxuong + "', bu=N'" + ktx.bu + "', cft=N'" + ktx.cft + "', toanha=N'" + ktx.toanha + "', bophan =N'" + ktx.bophan + "'";
+            query += ",ngayvaoxuong=N'" + ktx.ngayvaoxuong + "', phancap=N'" + ktx.phancap + "', capbac=N'" + ktx.capbac + "', gioitinh=N'" + ktx.gioitinh + "', machiphi =N'" + ktx.machiphi + "'";
+            query += ",ngaysinh=N'" + ktx.ngaysinh + "', ngayvaoKTX=N'" + ktx.ngayvaoKTX + "', ngayraKTX=N'" + ktx.ngayraKTX + "', quequan=N'" + ktx.quequan + "', toaKTX =N'" + ktx.toaKTX + "'";
+            query += ",sophong=N'" + ktx.sophong + "' , sogiuong =N'" + ktx.sogiuong + "',ghichu =N'" + ktx.ghichu + "' where id='" + ktx.id + "'";
+            if (helper.Execute(query))
+            {
+                return Json("Update succes", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Erro query ", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public JsonResult DeleteGA(string id)
+        {
+            string query = "Delete KTX where id='" + id.Trim() + "'";
+            return Json(helper.Execute(query), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult DownloadFile()
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Download/";
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path + "Employ.xlsx");
+            string fileName = "Employ.xlsx";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+        //t?i l?n file excel th?ng tin cho GA
+
+        // Tai len excel thong tin nguoi HR
+        HRhelper hr = new HRhelper();
+        [SessionCheck]
+        public ActionResult ExcelHR()
+        {
+            ViewBag.Data = hr.getListUser();
+            return View();
+        }
+
+        [SessionCheck]
+        [HttpPost]
+        public ActionResult ExcelHR(HttpPostedFileBase file)
+        {
+            string datainsert = DateTime.Now.ToString("yyyy/MM/dd 00:00:00");
+            string sql = "select * from [dbo].[UserHR] where thoigiantai > '" + datainsert + "' and  filename like'%.xlsx'";
+            if (hr.checkrow(sql))
+            {
+                Session["Message"] = "Da up du lieu ngay " + datainsert;
+                ViewBag.Message = "Da up du lieu ngay " + datainsert;
+            }
+            else
+            {
+                DateTime dateTimeC = DateTime.Now;
+
+                string UserName = (string)Session["UserName"];
+
+                string filePath = string.Empty;
+                if (file != null)
+                {
+                    string path = Server.MapPath("~/Uploads/");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    filePath = path + Path.GetFileName(file.FileName);
+                    string extension = Path.GetExtension(file.FileName);
+                    file.SaveAs(filePath);
+
+                    string filename = UserName + "_" + file.FileName;
+
+                    string conString = string.Empty;
+
+                    switch (extension)
+                    {
+                        case ".xls": //Excel 97-03.
+                            conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                            break;
+                        case ".xlsx": //Excel 07 and above.
+                            conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                            break;
+                    }
+
+                    DataTable dt = new DataTable();
+                    conString = string.Format(conString, filePath);
+
+                    using (OleDbConnection connExcel = new OleDbConnection(conString))
+                    {
+                        using (OleDbCommand cmdExcel = new OleDbCommand())
+                        {
+                            using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                            {
+                                cmdExcel.Connection = connExcel;
+
+                                //Get the name of First Sheet.
+                                connExcel.Open();
+                                DataTable dtExcelSchema;
+                                dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                                string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                                cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                                odaExcel.SelectCommand = cmdExcel;
+                                odaExcel.Fill(dt);
+                                connExcel.Close();
+                            }
+                        }
+                    }
+
+                    List<UserHR> Listuser = new List<UserHR>();
+
+                    int count = 0;
+                    string inputDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    if (dt.Rows.Count > 0)
+                    {
+                        string query_history = "insert into [dbo].[UserHR_History](mathe,hoten,nguoitailen,thoigiantai,filename) select mathe,hoten,nguoitailen,thoigiantai,filename from [dbo].[UserHR]";
+                        hr.Execute(query_history);
+                        string query_delete = "delete from [dbo].[UserHR]";
+                        if (hr.Execute(query_delete))
+                        {
+                            for (int i = 0; i < dt.Rows.Count; i++)
+                            {
+                                count++;
+
+                                UserHR uhr = new UserHR();
+
+                                uhr.mathe = dt.Rows[i][0].ToString().Trim();
+                                uhr.hoten = dt.Rows[i][1].ToString().Trim();
+                                uhr.nguoitailen = UserName;
+                                uhr.thoigiantai = inputDate;
+                                uhr.ip = getIPCom();
+
+                                string query = "insert into UserHR(mathe,hoten,nguoitailen,thoigiantai,ip,filename)";
+                                query += "  values ";
+                                query += "(N'" + uhr.mathe + "',N'" + uhr.hoten + "', N'" + uhr.nguoitailen + "',N'" + uhr.thoigiantai + "',N'" + uhr.ip + "',N'" + filename + "')";
+                                hr.Execute(query);
+
+                                Listuser.Add(uhr);
+                            }
+                        }
+                        else
+                        {
+                            Session["Message"] = "Loi truy van ";
+                        }
+
+                    }
+                    else
+                    {
+                        Session["Message"] = "Khong co du lieu ";
+                        ViewBag.Message = "Khong co du lieu";
+                    }
+
+                    if (Listuser != null)
+                    {
+                        ViewBag.Data = Listuser;
+                    }
+                }
+                else
+                {
+                    Session["Message"] = "File khong co du lieu";
+                    ViewBag.Message = "File khong co du lieu";
+                }
+            }
+            return RedirectToAction("ExcelHR");
+
+        }
+
+        public JsonResult GetbyIDHR(string id)
+        {
+            return Json(hr.getByID(id), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateHR(UserHR uhr)
+        {
+
+            string query = "update UserHR set mathe=N'" + uhr.mathe + "',hoten=N'" + uhr.hoten + "' where id='" + uhr.id + "'";
+
+            string nguoisuadoi = (string)Session["UserName"];
+            string ip = getIPCom();
+            string mathe = uhr.ip + "->" + uhr.mathe;
+            string query_log = "insert into UserHR_Log(mathe,nguoisuadoi,thoigiansua,ip) values(N'" + mathe + "',N'" + nguoisuadoi + "',getdate(),N'" + ip + "')";
+            hr.Execute(query_log);
+
+            if (hr.Execute(query))
+            {
+                return Json("Update succes", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Erro query ", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public JsonResult DeleteHR(string id, string mathe)
+        {
+            string query = "Delete FROM UserHR where id='" + id.Trim() + "'";
+            string nguoisuadoi = (string)Session["UserName"];
+            string ip = getIPCom();
+            string query_log = "insert into UserHR_Log(mathe,nguoisuadoi,thoigiansua,ip) values(N'" + mathe + "',N'" + nguoisuadoi + "',getdate(),N'" + ip + "')";
+            hr.Execute(query_log);
+            return Json(hr.Execute(query), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AddUserHR(UserHR user)
+        {
+            string nguoitailen = (string)Session["UserName"];
+            string inputDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            string ip = getIPCom();
+            string query = "insert into UserHR(mathe,hoten,nguoitailen,thoigiantai,ip,filename)";
+            query += "  values ";
+            query += "(N'" + user.mathe + "',N'" + user.hoten + "', N'" + nguoitailen + "',N'" + inputDate + "',N'" + ip + "',N'B?ng tay')";
+            if (hr.Execute(query) == true)
+            {
+                return Json("Them Thenh cong", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Them that bai ", JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+        // Tai len excel thong tin nguoi HR
+
+        public ActionResult DownLoadExcel()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult DownLoadExcel(string date, string selecttime)
+        {
+            string Message = null;
+            if (!string.IsNullOrEmpty(date))
+            {
+
+                string dateinput = date.Replace("-", "/");
+                string day = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd");
+
+                DateTime dateIn = Convert.ToDateTime(dateinput);
+                DateTime datenow = DateTime.Now;
+                TimeSpan dateTotal = datenow - dateIn;
+
+                if (dateTotal.Days >= 0)
+                {
+                    string query = "";
+                    switch (selecttime)
+                    {
+                        case "8":
+                            query = "SELECT* from cnsbg_rlcw_records WHERE device_name IN ('GZF073F1','GZF073F2','GZF073F3','GZF073F4')  AND face_time LIKE '%" + date.Trim() + "%' AND HOUR(face_time) >8 AND HOUR(face_time)<=13 ;";
+                            break;
+                        case "13":
+                            query = "SELECT* from cnsbg_rlcw_records WHERE device_name IN ('GZF073F1','GZF073F2','GZF073F3','GZF073F4') AND face_time LIKE '%" + date.Trim() + "%' AND HOUR(face_time) <= 8 ";
+                            break;
+                        case "19":
+                            query = "SELECT* from cnsbg_rlcw_records WHERE device_name IN ('GZF073F1','GZF073F2','GZF073F3','GZF073F4') AND face_time LIKE '%" + date.Trim() + "%' AND HOUR(face_time) > 13 AND HOUR(face_time)<= 19 ";
+                            break;
+                    }
+
+                    getData getdata = new getData();
+                    List<Temp> model = getdata.getListTemp(query);
+                    if (model.Count > 0)
+                    {
+                        ExportExcel export = new ExportExcel();
+                        export.ToExcel(Response, model);
+                    }
+                    else
+                    {
+                        Message = "Khong co du lieu cua ngay :" + day;
+                    }
+
+                }
+                else
+                {
+                    Message = "Ngay lay du lieu phai nho hon ngay hien tai ! :" + datenow;
+                }
+            }
+            else Message = "Vui long nhap vao ngay lay du lieu ! ";
+
+            ViewBag.Message = Message;
+            return View();
+        }
+        // Tai len excel thong tin nguoi can lay nhiet do
+        public string getIPCom()
+        {
+            string ip = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            }
+            return ip;
+        }
+
+        public ActionResult SearchInfor()
+        {
+            //http://10.224.69.100/postman/api/hr/getEmpObj?id
+            return View();
+        }
+
+        Cantenhelper ct = new Cantenhelper();
+        [SessionCheck]
+        public ActionResult ConfigCanten()
+        {
+            ViewBag.Data = ct.getListUser();
+            return View();
+        }
+        //[SessionCheck]
+        public ActionResult SearchNear()
+        {
+            return View();
+        }
+        public JsonResult addCanten(ConfigCanten canten)
+        {
+            string date = DateTime.Now.ToString();
+            string UserName = (string)Session["UserName"];
+            //string UserName = "V0991291";
+            string IP = getIPCom();
+            string query = "select * from CantenConfigF where position ='" + canten.id.Trim() + "-" + canten.position.Trim() + "' and type='ROOT'";
+            bool checkrow = ct.checkrow(query);
+            if (checkrow == false)
+            {
+                string position = canten.position;
+                string area = canten.id;
+                string f1 = canten.user_config;
+                string f2 = canten.time_config;
+                string f3 = canten.time_edit;
+                string NoteID = canten.id.Trim() + "-" + canten.position.Trim();
+                string sql = "insert into CantenConfigF(position,type,user_config,time_config,ip,NoteID) values (N'" + canten.id.Trim() + "-" + canten.position.Trim() + "',N'ROOT',N'" + UserName + "',N'" + date + "',N'" + IP + "',N'" + NoteID + "')";
+                ct.Execute(sql);
+
+                string[] arrf1 = f1.Split(',');
+                //string[] arrf2 = f2.Split(',');
+                //string[] arrf3 = f3.Split(',');
+                for (int i = 0; i < arrf1.Length; i++)
+                {
+                    string rf1 = arrf1[i].ToUpper().Trim();
+                    string query1 = "select * from CantenConfigF where position =N'" + area.Trim() + "-" + rf1.Trim() + "' and NoteID=N'" + NoteID + "' and type='F1' ";
+                    if (ct.checkrow(query1) == false)
+                    {
+                        string sql1 = "insert into CantenConfigF(position,type,user_config,time_config,ip,NoteID) values (N'" + canten.id.Trim() + "-" + rf1 + "',N'F1',N'" + UserName + "',N'" + date + "',N'" + IP + "',N'" + NoteID + "')";
+                        ct.Execute(sql1);
+                    }
+
+                }
+
+                //for (int i = 0; i < arrf2.Length; i++)
+                //{
+                //    string rf2 = arrf2[i].ToUpper().Trim();
+                //    string query2 = "select * from CantenConfigF where position ='" + area.Trim() + "-" + rf2.Trim() + "' and NoteID=N'" + NoteID + "' and type='F2' ";
+                //    if (ct.checkrow(query2) == false)
+                //    {
+                //        string sql2 = "insert into CantenConfigF(position,type,user_config,time_config,ip,NoteID) values (N'" + canten.id.Trim() + "-" + rf2 + "',N'F2',N'" + UserName + "',N'" + date + "',N'" + IP + "',N'" + NoteID + "')";
+                //        ct.Execute(sql2);
+                //    }
+
+                //}
+
+                //for (int i = 0; i < arrf3.Length; i++)
+                //{
+                //    string rf3 = arrf3[i].ToUpper().Trim();
+                //    string query3 = "select * from CantenConfigF where position ='" + area.Trim() + "-" + rf3.Trim() + "' and NoteID=N'" + NoteID + "' and type='F3' ";
+                //    if (ct.checkrow(query3) == false)
+                //    {
+                //        string sql2 = "insert into CantenConfigF(position,type,user_config,time_config,ip,NoteID) values (N'" + canten.id.Trim() + "-" + rf3 + "',N'F3',N'" + UserName + "',N'" + date + "',N'" + IP + "',N'" + NoteID + "')";
+                //        ct.Execute(sql2);
+                //    }
+
+                //}
+
+                return Json("Success !");
+            }
+            else
+            {
+                return Json("Position already exist! ");
+            }
+        }
+
+        public JsonResult GetIDCanten(string id)
+        {
+            return Json(ct.getByID(id), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateCanten(ConfigCanten canten)
+        {
+            string date = DateTime.Now.ToString();
+            string UserName = (string)Session["UserName"];
+            //string UserName = "V0991291";
+            string query = "update CantenConfigF set type=N'" + canten.type + "',position=N'" + canten.position + "' ,time_edit=N'" + UserName + "_" + date + "' where id='" + canten.id + "'";
+            if (ct.Execute(query))
+            {
+                return Json("Update succes", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Erro query ", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public JsonResult DeleteCanten(string id)
+        {
+            string query = "Delete FROM CantenConfigF where id='" + id.Trim() + "'";
+            return Json(ct.Execute(query), JsonRequestBehavior.AllowGet);
+        }
+        MysqlHelper mysql = new MysqlHelper();
+        public JsonResult getUserCanten(string emp)
+        {
+            string sql = " SELECT empno,empname,position, date_format(MAX(TIME),'%Y-%m-%d %T') AS time FROM VN_Record.record_vn WHERE POSITION LIKE 'NA-%' AND empno IN(sELECT DISTINCT employeecode from VN_Record.consumedate_vn WHERE ConsumeRestaurant in ('GJ','GW','HT'))  and empno = '" + emp + "' GROUP BY empno,empname,position order by time desc;";
+            return Json(mysql.getList(sql), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getPositionF(string emp, string position, string time)
+        {
+            DataTable tbF1;
+            DataTable tbF2;
+            string query_positon_f1 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F1' ";
+            string query_positon_f2 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F2' ";
+            tbF1 = ct.queryDatatable(query_positon_f1);
+            tbF2 = ct.queryDatatable(query_positon_f2);
+            string position_f1 = null;
+            string position_f2 = null;
+            if (tbF1.Rows.Count > 0)
+            {
+                for (int i = 0; i < tbF1.Rows.Count; i++)
+                {
+                    if (i == (tbF1.Rows.Count - 1))
+                    {
+                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "'";
+                    }
+                    else
+                    {
+                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "',";
+                    }
+
+                }
+            }
+            if (tbF2.Rows.Count > 0)
+            {
+                for (int i = 0; i < tbF2.Rows.Count; i++)
+                {
+                    if (i == (tbF2.Rows.Count - 1))
+                    {
+                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "'";
+                    }
+                    else
+                    {
+                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "',";
+                    }
+
+                }
+            }
+
+            List<UserCanten> list = new List<UserCanten>();
+            //if (position_f1 != null || position_f2 != null )
+            //{
+            UserCanten ctr = new UserCanten();
+            ctr.empno = emp;
+
+            ctr.position = position;
+            ctr.time = time;
+            ctr.ff = "Range";
+            DataTable tb = new DataTable();
+            tb = mysql.getDataTable("select EmpName from VN_Record.record_vn where EmpNo='" + emp.Trim() + "' limit 1");
+            if (tb.Rows.Count > 0)
+            {
+                ctr.empname = tb.Rows[0][0].ToString();
+            }
+            else
+            {
+                ctr.empname = emp;
+            }
+            list.Add(ctr);
+            //}
+
+            if (position_f1 != null)
+            {
+                string sqlF1 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE); ";
+                //string sqlF1 = "select  EmpNo,EmpName,Position,Time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") ; ";
+                DataTable tbr1 = new DataTable();
+                tbr1 = mysql.getDataTable(sqlF1);
+                if (tbr1.Rows.Count > 0)
+                {
+                    for (int i = 0; i < tbr1.Rows.Count; i++)
+                    {
+                        UserCanten ct = new UserCanten();
+                        ct.empno = tbr1.Rows[i][0].ToString();
+                        ct.empname = tbr1.Rows[i][1].ToString();
+                        ct.position = tbr1.Rows[i][2].ToString();
+                        ct.time = tbr1.Rows[i][3].ToString();
+                        ct.ff = "F1";
+
+                        list.Add(ct);
+                    }
+                }
+            }
+
+            if (position_f2 != null)
+            {
+                string sqlF2 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f2 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE); ";
+                DataTable tbr2 = new DataTable();
+                tbr2 = mysql.getDataTable(sqlF2);
+                if (tbr2.Rows.Count > 0)
+                {
+                    for (int i = 0; i < tbr2.Rows.Count; i++)
+                    {
+                        UserCanten ct = new UserCanten();
+                        ct.empno = tbr2.Rows[i][0].ToString();
+                        ct.empname = tbr2.Rows[i][1].ToString();
+                        ct.position = tbr2.Rows[i][2].ToString();
+                        ct.time = tbr2.Rows[i][3].ToString();
+                        ct.ff = "F2";
+
+                        list.Add(ct);
+                    }
+                }
+            }
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getPositionFS(string emp, string position, string time, int select)
+        {
+            List<UserCanten> list = new List<UserCanten>();
+            DataTable tbF1;
+            DataTable tbF2;
+            DataTable tbF3;
+            string query_positon_f1;
+            string query_positon_f2;
+            string query_positon_f3;
+            string position_f1 = null;
+            string position_f2 = null;
+            string position_f3 = null;
+
+            UserCanten ctr = new UserCanten();
+            ctr.empno = emp;
+
+            ctr.position = position;
+            ctr.time = time;
+            ctr.ff = "Range";
+            DataTable tb = new DataTable();
+            tb = mysql.getDataTable("select EmpName from VN_Record.record_vn where EmpNo='" + emp.Trim() + "' limit 1");
+            if (tb.Rows.Count > 0)
+            {
+                ctr.empname = tb.Rows[0][0].ToString();
+            }
+            else
+            {
+                ctr.empname = emp;
+            }
+            list.Add(ctr);
+
+            switch (select)
+            {
+                case 0:
+                    query_positon_f1 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F1' ";
+                    query_positon_f2 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F2' ";
+                    query_positon_f3 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F3' ";
+                    tbF1 = ct.queryDatatable(query_positon_f1);
+                    tbF2 = ct.queryDatatable(query_positon_f2);
+                    tbF3 = ct.queryDatatable(query_positon_f3);
+
+                    if (tbF1.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF1.Rows.Count; i++)
+                        {
+                            if (i == (tbF1.Rows.Count - 1))
+                            {
+                                position_f1 += "'" + tbF1.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "'";
+                            }
+                            else
+                            {
+                                position_f1 += "'" + tbF1.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "',";
+                            }
+
+                        }
+                    }
+                    if (tbF2.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF2.Rows.Count; i++)
+                        {
+                            if (i == (tbF2.Rows.Count - 1))
+                            {
+                                position_f2 += "'" + tbF2.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "'";
+                            }
+                            else
+                            {
+                                position_f2 += "'" + tbF2.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "',";
+                            }
+
+                        }
+                    }
+                    if (tbF3.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF3.Rows.Count; i++)
+                        {
+                            if (i == (tbF3.Rows.Count - 1))
+                            {
+                                position_f3 += "'" + tbF3.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "'";
+                            }
+                            else
+                            {
+                                position_f3 += "'" + tbF3.Rows[i][1].ToString().Replace("\r\n", string.Empty) + "',";
+                            }
+
+                        }
+                    }
+
+                    if (position_f1 != null)
+                    {
+                        string sqlF1 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc ";
+                        DataTable tbr1 = new DataTable();
+                        tbr1 = mysql.getDataTable(sqlF1);
+                        if (tbr1.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr1.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr1.Rows[i][0].ToString();
+                                ct.empname = tbr1.Rows[i][1].ToString();
+                                ct.position = tbr1.Rows[i][2].ToString();
+                                ct.time = tbr1.Rows[i][3].ToString();
+                                ct.ff = "Range 1";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    if (position_f2 != null)
+                    {
+                        string sqlF2 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f2 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc ";
+                        DataTable tbr2 = new DataTable();
+                        tbr2 = mysql.getDataTable(sqlF2);
+                        if (tbr2.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr2.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr2.Rows[i][0].ToString();
+                                ct.empname = tbr2.Rows[i][1].ToString();
+                                ct.position = tbr2.Rows[i][2].ToString();
+                                ct.time = tbr2.Rows[i][3].ToString();
+                                ct.ff = "Range 2";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    if (position_f3 != null)
+                    {
+                        string sqlF3 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f3 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+                        DataTable tbr3 = new DataTable();
+                        tbr3 = mysql.getDataTable(sqlF3);
+                        if (tbr3.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr3.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr3.Rows[i][0].ToString();
+                                ct.empname = tbr3.Rows[i][1].ToString();
+                                ct.position = tbr3.Rows[i][2].ToString();
+                                ct.time = tbr3.Rows[i][3].ToString();
+                                ct.ff = "Range 3";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    query_positon_f1 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F1' ";
+                    tbF1 = ct.queryDatatable(query_positon_f1);
+                    if (tbF1.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF1.Rows.Count; i++)
+                        {
+                            if (i == (tbF1.Rows.Count - 1))
+                            {
+                                position_f1 += "'" + tbF1.Rows[i][1].ToString() + "'";
+                            }
+                            else
+                            {
+                                position_f1 += "'" + tbF1.Rows[i][1].ToString() + "',";
+                            }
+
+                        }
+                    }
+                    if (position_f1 != null)
+                    {
+                        string sqlF1 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+                        DataTable tbr1 = new DataTable();
+                        tbr1 = mysql.getDataTable(sqlF1);
+                        if (tbr1.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr1.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr1.Rows[i][0].ToString();
+                                ct.empname = tbr1.Rows[i][1].ToString();
+                                ct.position = tbr1.Rows[i][2].ToString();
+                                ct.time = tbr1.Rows[i][3].ToString();
+                                ct.ff = "Range 1";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    query_positon_f2 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F2' ";
+                    tbF2 = ct.queryDatatable(query_positon_f2);
+                    if (tbF2.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF2.Rows.Count; i++)
+                        {
+                            if (i == (tbF2.Rows.Count - 1))
+                            {
+                                position_f2 += "'" + tbF2.Rows[i][1].ToString() + "'";
+                            }
+                            else
+                            {
+                                position_f2 += "'" + tbF2.Rows[i][1].ToString() + "',";
+                            }
+
+                        }
+                    }
+                    if (position_f2 != null)
+                    {
+                        string sqlF2 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f2 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc ";
+                        DataTable tbr2 = new DataTable();
+                        tbr2 = mysql.getDataTable(sqlF2);
+                        if (tbr2.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr2.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr2.Rows[i][0].ToString();
+                                ct.empname = tbr2.Rows[i][1].ToString();
+                                ct.position = tbr2.Rows[i][2].ToString();
+                                ct.time = tbr2.Rows[i][3].ToString();
+                                ct.ff = "Range 2";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    query_positon_f3 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F3' ";
+                    tbF3 = ct.queryDatatable(query_positon_f3);
+                    if (tbF3.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < tbF3.Rows.Count; i++)
+                        {
+                            if (i == (tbF3.Rows.Count - 1))
+                            {
+                                position_f3 += "'" + tbF3.Rows[i][1].ToString() + "'";
+                            }
+                            else
+                            {
+                                position_f3 += "'" + tbF3.Rows[i][1].ToString() + "',";
+                            }
+
+                        }
+                    }
+                    if (position_f3 != null)
+                    {
+                        string sqlF3 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f3 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+                        DataTable tbr3 = new DataTable();
+                        tbr3 = mysql.getDataTable(sqlF3);
+                        if (tbr3.Rows.Count > 0)
+                        {
+                            for (int i = 0; i < tbr3.Rows.Count; i++)
+                            {
+                                UserCanten ct = new UserCanten();
+                                ct.empno = tbr3.Rows[i][0].ToString();
+                                ct.empname = tbr3.Rows[i][1].ToString();
+                                ct.position = tbr3.Rows[i][2].ToString();
+                                ct.time = tbr3.Rows[i][3].ToString();
+                                ct.ff = "Range 3";
+
+                                list.Add(ct);
+                            }
+                        }
+                    }
+                    break;
+            }
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        //public JsonResult getPositionFS(string emp, string position, string time, int select )
+        //{
+        //    List<UserCanten> list = new List<UserCanten>();
+        //    DataTable tbF1;
+        //    DataTable tbF2;
+        //    string query_positon_f1;
+        //    string query_positon_f2;
+        //    string position_f1 = null;
+        //    string position_f2 = null;
+
+        //    UserCanten ctr = new UserCanten();
+        //    ctr.empno = emp;
+
+        //    ctr.position = position;
+        //    ctr.time = time;
+        //    ctr.ff = "ROOT";
+        //    DataTable tb = new DataTable();
+        //    tb = mysql.getDataTable("select EmpName from VN_Record.record_vn where EmpNo='" + emp.Trim() + "' limit 1");
+        //    if (tb.Rows.Count > 0)
+        //    {
+        //        ctr.empname = tb.Rows[0][0].ToString();
+        //    }
+        //    else
+        //    {
+        //        ctr.empname = emp;
+        //    }
+        //    list.Add(ctr);
+
+        //    switch (select)
+        //    {
+        //        case 0:
+        //            query_positon_f1 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F1' ";
+        //            query_positon_f2 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F2' ";
+        //            tbF1 = ct.queryDatatable(query_positon_f1);
+        //            tbF2 = ct.queryDatatable(query_positon_f2);
+
+        //            if (tbF1.Rows.Count > 0)
+        //            {
+        //                for (int i = 0; i < tbF1.Rows.Count; i++)
+        //                {
+        //                    if (i == (tbF1.Rows.Count - 1))
+        //                    {
+        //                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "'";
+        //                    }
+        //                    else
+        //                    {
+        //                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "',";
+        //                    }
+
+        //                }
+        //            }
+        //            if (tbF2.Rows.Count > 0)
+        //            {
+        //                for (int i = 0; i < tbF2.Rows.Count; i++)
+        //                {
+        //                    if (i == (tbF2.Rows.Count - 1))
+        //                    {
+        //                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "'";
+        //                    }
+        //                    else
+        //                    {
+        //                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "',";
+        //                    }
+
+        //                }
+        //            }
+
+        //            if (position_f1 != null)
+        //            {
+        //                string sqlF1 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+        //                DataTable tbr1 = new DataTable();
+        //                tbr1 = mysql.getDataTable(sqlF1);
+        //                if (tbr1.Rows.Count > 0)
+        //                {
+        //                    for (int i = 0; i < tbr1.Rows.Count; i++)
+        //                    {
+        //                        UserCanten ct = new UserCanten();
+        //                        ct.empno = tbr1.Rows[i][0].ToString();
+        //                        ct.empname = tbr1.Rows[i][1].ToString();
+        //                        ct.position = tbr1.Rows[i][2].ToString();
+        //                        ct.time = tbr1.Rows[i][3].ToString();
+        //                        ct.ff = "Range 1";
+
+        //                        list.Add(ct);
+        //                    }
+        //                }
+        //            }
+        //            if (position_f2 != null)
+        //            {
+        //                string sqlF2 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f2 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+        //                DataTable tbr2 = new DataTable();
+        //                tbr2 = mysql.getDataTable(sqlF2);
+        //                if (tbr2.Rows.Count > 0)
+        //                {
+        //                    for (int i = 0; i < tbr2.Rows.Count; i++)
+        //                    {
+        //                        UserCanten ct = new UserCanten();
+        //                        ct.empno = tbr2.Rows[i][0].ToString();
+        //                        ct.empname = tbr2.Rows[i][1].ToString();
+        //                        ct.position = tbr2.Rows[i][2].ToString();
+        //                        ct.time = tbr2.Rows[i][3].ToString();
+        //                        ct.ff = "Range 2";
+
+        //                        list.Add(ct);
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //        case 1:
+        //            query_positon_f1 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F1' ";
+        //            tbF1 = ct.queryDatatable(query_positon_f1);
+        //            if (tbF1.Rows.Count > 0)
+        //            {
+        //                for (int i = 0; i < tbF1.Rows.Count; i++)
+        //                {
+        //                    if (i == (tbF1.Rows.Count - 1))
+        //                    {
+        //                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "'";
+        //                    }
+        //                    else
+        //                    {
+        //                        position_f1 += "'" + tbF1.Rows[i][1].ToString() + "',";
+        //                    }
+
+        //                }
+        //            }
+        //            if (position_f1 != null)
+        //            {
+        //                string sqlF1 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f1 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc";
+        //                DataTable tbr1 = new DataTable();
+        //                tbr1 = mysql.getDataTable(sqlF1);
+        //                if (tbr1.Rows.Count > 0)
+        //                {
+        //                    for (int i = 0; i < tbr1.Rows.Count; i++)
+        //                    {
+        //                        UserCanten ct = new UserCanten();
+        //                        ct.empno = tbr1.Rows[i][0].ToString();
+        //                        ct.empname = tbr1.Rows[i][1].ToString();
+        //                        ct.position = tbr1.Rows[i][2].ToString();
+        //                        ct.time = tbr1.Rows[i][3].ToString();
+        //                        ct.ff = "Range 1";
+
+        //                        list.Add(ct);
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //        case 2:             
+        //            query_positon_f2 = "SELECT * FROM CantenConfigF where NoteID='" + position.Trim() + "' and type='F2' ";
+        //            tbF2 = ct.queryDatatable(query_positon_f2);
+        //            if (tbF2.Rows.Count > 0)
+        //            {
+        //                for (int i = 0; i < tbF2.Rows.Count; i++)
+        //                {
+        //                    if (i == (tbF2.Rows.Count - 1))
+        //                    {
+        //                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "'";
+        //                    }
+        //                    else
+        //                    {
+        //                        position_f2 += "'" + tbF2.Rows[i][1].ToString() + "',";
+        //                    }
+
+        //                }
+        //            }
+        //            if (position_f2 != null)
+        //            {
+        //                string sqlF2 = "select  EmpNo,EmpName,Position,date_format(TIME,'%Y-%m-%d %T') AS time  FROM record_vn WHERE POSITION LIKE 'NA-%' and Position in (" + position_f2 + ") and Time between DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL - 15 MINUTE) and DATE_ADD(date_format('" + time.Trim() + "','%Y-%m-%d %T'),INTERVAL 15 MINUTE) order by time desc ";
+        //                DataTable tbr2 = new DataTable();
+        //                tbr2 = mysql.getDataTable(sqlF2);
+        //                if (tbr2.Rows.Count > 0)
+        //                {
+        //                    for (int i = 0; i < tbr2.Rows.Count; i++)
+        //                    {
+        //                        UserCanten ct = new UserCanten();
+        //                        ct.empno = tbr2.Rows[i][0].ToString();
+        //                        ct.empname = tbr2.Rows[i][1].ToString();
+        //                        ct.position = tbr2.Rows[i][2].ToString();
+        //                        ct.time = tbr2.Rows[i][3].ToString();
+        //                        ct.ff = "Range 2";
+
+        //                        list.Add(ct);
+        //                    }
+        //                }
+        //            }
+        //            break;
+        //    }
+        //    return Json(list, JsonRequestBehavior.AllowGet);
+        //}
+
+        //public JsonResult DownloadExcelCanten(string empnosearch, string positionsearch, string timesearch)
+        //{
+        //    List<UserCanten> list = new List<UserCanten>();
+        //    var jsonString = getPositionF(empnosearch, positionsearch, timesearch);
+        //    string result = "";
+        //    try
+        //    {
+        //        list = (List<UserCanten>)jsonString.Data;
+        //        if (list.Count > 0)
+        //        {
+        //            ExportExcel export = new ExportExcel();
+        //            export.ToExcel(Response, jsonString);
+        //            result= "Tai file excel thanh cong";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        result=(ex.Message);
+        //    }
+        //    return Json(result);
+        //}
+
+        public JsonResult getDate(string emp, DateTime timestart, DateTime timeend, int select)
+        {
+            List<UserCanten> list = new List<UserCanten>();
+            try
+            {
+                string time1 = timestart.ToString("yyyy-MM-dd 00:00:00");
+                string time2 = timeend.ToString("yyyy-MM-dd 23:59:00");
+                string sql = "select empno,empname,Position, date_format(MAX(TIME),'%Y-%m-%d %T') AS time  from VN_Record.record_vn where  EmpNo ='" + emp.ToUpper().Trim() + "' and  time >= '" + time1 + "' and time <= '" + time2 + "' and Position like 'NA%' group by empno,empname,Position order by time desc;";
+                DataTable tbposition;
+                tbposition = mysql.getDataTable(sql);
+
+                if (tbposition.Rows.Count > 0)
+                {
+                    //var jsonString =getPositionF("V0939994", "NA-QW-B11-1F-01-23", "2021-07-15 09:58:21");
+                    //list.AddRange((List<UserCanten>)jsonString.Data);
+                    for (int i = 0; i < tbposition.Rows.Count; i++)
+                    {
+                        string emp1 = tbposition.Rows[i][0].ToString().Trim();
+                        string position1 = tbposition.Rows[i][2].ToString().Trim();
+                        string time11 = tbposition.Rows[i][3].ToString().Trim();
+                        var jsonString = getPositionFS(emp1, position1, time11, select);
+                        list.AddRange((List<UserCanten>)jsonString.Data);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getDataTree(string emp, DateTime timestart, DateTime timeend, int select)
+        {
+            List<Position> list = new List<Position>();
+            List<UserCanten> listct = new List<UserCanten>();
+            try
+            {
+                string time1 = timestart.ToString("yyyy-MM-dd 00:00:00");
+                string time2 = timeend.ToString("yyyy-MM-dd 23:59:00");
+                var jsonString = GetF0(emp, time1, time2);
+                list.AddRange((List<Position>)jsonString.Data);
+
+                if (list.Count > 0)
+                {
+                    for (int i =0;i< list.Count;i++)
+                    {
+                        UserCanten ct = new UserCanten();
+                        ct.empno = list[i].EmpNo;
+                        ct.empname = list[i].EmpName;
+                        ct.position = list[i].Pos;
+                        ct.time = list[i].Time;
+                        ct.ff = "Range";
+                        listct.Add(ct);
+                        List<Position> listF1 = new List<Position>();
+                        var jsonF1 = GetF1(list[0].Pos, list[0].Time);
+                        listF1.AddRange((List<Position>)jsonF1.Data);
+                        if (listF1.Count > 0)
+                        {
+                            for (int i1 = 0; i1 < listF1.Count; i1++)
+                            {
+                                UserCanten ct1 = new UserCanten();
+                                ct1.empno = listF1[i].EmpNo;
+                                ct1.empname = listF1[i].EmpName;
+                                ct1.position = listF1[i].Pos;
+                                ct1.time = listF1[i].Time;
+                                ct1.ff = "Range 1";
+                                listct.Add(ct1);
+
+                                List<Position> listF2 = new List<Position>();
+                                var jsonF2 = GetF1(listF1[i1].Pos,listF1[i1].Time);
+                                listF2.AddRange((List<Position>)jsonF2.Data);
+                                if (listF2.Count > 0)
+                                {
+                                    for (int i2 = 0; i2 < listF2.Count; i2++)
+                                    {
+                                        UserCanten ct2 = new UserCanten();
+                                        ct2.empno = listF2[i].EmpNo;
+                                        ct2.empname = listF2[i].EmpName;
+                                        ct2.position = listF2[i].Pos;
+                                        ct2.time = listF2[i].Time;
+                                        ct2.ff = "Range 2";
+                                        listct.Add(ct2);
+                                        List<Position> listF3 = new List<Position>();
+                                        var jsonF3 = GetF1(listF2[i2].Pos, listF2[i2].Time);
+                                        listF3.AddRange((List<Position>)jsonF3.Data);
+                                        if(listF3.Count > 0)
+                                        {
+                                            for (int i3 = 0; i3 < listF3.Count; i3++)
+                                            {
+                                                UserCanten ct3 = new UserCanten();
+                                                ct3.empno = listF3[i].EmpNo;
+                                                ct3.empname = listF3[i].EmpName;
+                                                ct3.position = listF3[i].Pos;
+                                                ct3.time = listF3[i].Time;
+                                                ct3.ff = "Range 3";
+                                                listct.Add(ct3);
+
+                                                //listct.Add(new UserCanten(listF3[i3].EmpNo, listF3[i3].EmpName, listF3[i3].Pos, listF3[i3].Time, "Range 3"));
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            List<UserCanten> lct = listct.Distinct().ToList();
+            return Json(lct, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetF0(string emp, string timeStart, string timeEnd)
+        {
+            MysqlHelper mysql = new MysqlHelper();
+            //Get emp location
+            DataTable tb = new DataTable();
+
+            string sql = string.Format("SELECT Position,date_format(TIME,'%Y-%m-%d %T') AS time, EmpNo,EmpName FROM VN_Record.record_vn where EmpNo='{0}' and time between '{1}' and '{2}' and Position like 'NA%'", emp, timeStart, timeEnd);
+            tb = mysql.getDataTable(sql);
+            List<Position> listPos = new List<Position>();
+            if (tb != null)
+            {
+                foreach (DataRow dr in tb.Rows)
+                {
+                    listPos.Add(new Position(dr["Position"].ToString(), dr["Time"].ToString(), dr["EmpNo"].ToString(), dr["EmpName"].ToString()));
+                }
+            }
+            
+            return Json(listPos, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetF1(string position, string time)
+        {
+            Cantenhelper ct = new Cantenhelper();
+            MysqlHelper mysql = new MysqlHelper();
+            position = position.Trim();
+            List<Position> res = new List<Position>();
+            string sql = string.Format("SELECT Position FROM CanteenConf where NoteID='{0}'", position);
+            DataTable dt = ct.queryDatatable(sql);
+            string listNearPos = "";
+            if (dt.Rows.Count > 0)
+            {
+                listNearPos = dt.Rows[0][0].ToString();
+            }
+            sql = "select EmpNo,EmpName,Position, date_format(TIME,'%Y-%m-%d %T') AS time FROM record_vn WHERE POSITION LIKE 'NA-%' and Time between DATE_ADD('{0}',INTERVAL - 15 MINUTE) and DATE_ADD('{0}',INTERVAL 15 MINUTE) and Position = '{1}' order by time desc";
+            foreach (string pos in listNearPos.Split(';'))
+            {
+                dt = mysql.getDataTable(string.Format(sql, time, pos.Trim()));
+                if (dt != null)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        res.Add(new Position(dr["Position"].ToString(), dr["Time"].ToString(), dr["EmpNo"].ToString(), dr["EmpName"].ToString()));
+                    }
+                }
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+    }
+}

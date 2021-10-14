@@ -1,0 +1,290 @@
+﻿
+@{
+    ViewBag.Title = "InsertFile";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+<style>
+    .input-group {
+        margin-bottom: 5px;
+    }
+
+    .input-group-text {
+        font-size: 12px;
+    }
+
+    .lbtxt {
+        font-size: 12px;
+    }
+
+    .input-group-prepend {
+        width: 110px;
+    }
+
+    .input-group-text {
+        min-width: 100%;
+    }
+</style>
+<link href="~/Assets/css/loader.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">UPLOAD FILE EXCEL</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="row" style="margin:10px; margin-bottom:0px;" id="InsertExcel">
+            <div class="card" style="width:100%;">
+                <div class="card-header bg-success ">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload file excel
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="w3-container" style="display:none;width:100%;" id="upload">
+                            <div class="w3-light-grey">
+                                <div id="myBar" class="w3-container w3-green" style="height:30px;width:10%;background-color:black;">
+                                    <p id="myP" style="margin:4px;"><span id="demo">0</span> %</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-7">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Import excel file infor user / Tải tệp excel thông tin </legend>
+                                    @using (Html.BeginForm("InsertFile", "Share", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="control-label col-md-12 ">Choose file/ Chọn tệp</label>
+                                                <input name="file" type="file" class="form-control" style="padding-top: 3px; padding-left: 3px;" />
+                                            </div>
+                                            <div class="">
+                                                <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                                <input type="submit" style="display:none" id="uploadfile">
+                                                <input onclick="move();this.disabled='true'" class="col-12 btn-outline-primary form-control" value="Upload/ Tải lên" style="margin-top:7px;" />
+                                            </div>
+                                        </div>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Download format/ Tải xuống file mẫu </legend>
+                                    <div class="row" style="margin-bottom: 7px; margin-left:10px;">
+                                        <div class="">
+                                            <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                            <a class="col-12 btn-outline-primary form-control" href='@Url.Action("DownloadFileExcel", "Share")'>Download/ Tải xuống</a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left col -->
+                        <section class="col-lg-12 connectedSortable">
+                            <!-- Custom tabs (Charts with tabs)-->
+                            <div class="card" id="more_infor">
+                                <div class="card-header" style="background-color: #1686ff; color: white;">
+                                    <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i> List infor/ Danh sách thông tin </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="overflow-wrap:break-word">
+                                    <div style="text-align:center;align-content:center;display:none;" id="loading">
+                                        <div class="spinner-border" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content p-0 table-responsive" id="more_infor">
+                                        <table class="table table-bordered table-hover" id="table_Vaccin" style="font-family: arial;font-size:12px;">
+                                            <thead class="bg-info">
+                                                <tr>
+                                                    <th scope="col">Mã thẻ</th>
+                                                    <th scope="col">Họ tên</th>
+                                                    <th scope="col">Xưởng LV</th>
+                                                    <th scope="col">Bu</th>
+                                                    <th scope="col">CFT</th>
+                                                    <th scope="col">Bộ phận</th>
+                                                    <th scope="col">Đã tiêm mũi 1</th>
+                                                    <th scope="col">Đã tiêm mũi 2</th>
+                                                    <th scope="col">Ngày tiêm</th>
+                                                    <th scope="col">Địa điểm tiêm</th>
+                                                    <th scope="col">Địa chỉ tiêm</th>
+                                                    <th scope="col">Loại</th>
+                                                    <th scope="col">Bằng chứng</th>
+                                                    <th scope="col">Nguyên Nhân</th>
+                                                    <th scope="col">Ngày tải</th>
+                                                    <th scope="col">Người tải</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th> </th>
+                                                    <th> </th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div><!-- /.card-body -->
+
+                                </div>
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+</div>
+
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var session = '@Session["Message"]';
+        if (session != '') {
+            alert(session);
+        }
+        loadData();
+    });
+
+    function move() {
+        $('#uploadfile').click();
+        document.getElementById("upload").style.display = 'block';
+        var elem = document.getElementById("myBar");
+        var width = 10;
+        var id = setInterval(frame, 1000);
+        function frame() {
+            if (width >= 90) {
+                //clearInterval(id);
+                //document.getElementById("myP").className = "w3-animate-opacity";
+                //document.getElementById("myP").innerHTML = "Successfully uploaded";
+                //document.getElementById("myP").style.textAlign = "Center";
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                var num = width;
+                num = num.toFixed(0)
+                document.getElementById("demo").innerHTML = num;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        loadData();
+
+    });
+    //Load Data function
+    function loadData() {
+        $('#loading').show();
+        $('#more_infor').hide();
+        $.ajax({
+            url: "/api/ListFileUpload",
+            typr: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '';
+                $.each(result, function (key, item) {
+                    html += '<tr>';
+                    html += '<td>' + item.MaThe + '</td>';
+                    html += '<td>' + item.HoTen + '</td>';
+                    html += '<td>' + item.XuongLV + '</td>';
+                    html += '<td>' + item.Bu + '</td>';
+                    html += '<td>' + item.CFT + '</td>';
+                    html += '<td>' + item.BoPhan + '</td>';
+                    html += '<td>' + item.DaTiem + '</td>';
+                    html += '<td>' + item.NgayTiem1 + '</td>';
+                    html += '<td>' + item.NgayTiem2 + '</td>';
+                    html += '<td>' + item.DiaDiemTiem + '</td>';
+                    html += '<td>' + item.DiaChiTiem + '</td>';
+                    html += '<td>' + item.Loai + '</td>';
+                    html += '<td>' + item.BangChung + '</td>';
+                    html += '<td>' + item.NguyenNhan + '</td>';
+                    html += '<td>' + item.NgayTaiLen + '</td>';
+                    html += '<td>' + item.NguoiTaiLen + '</td>';
+                    
+                    html += '</tr>';
+                });
+                $('#tbody').html(html);
+
+                $('#loading').hide();
+                $('#more_infor').show();
+
+                $('#table_Vaccin').DataTable({
+                    initComplete: function () {
+                        this.api().columns().every(function () {
+                            var column = this;
+                            var select = $('<select><option value=""></option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+                                    column
+                                        .search(val ? '^' + val + '$' : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>')
+                            });
+                        });
+                    }
+                });
+            },
+            error: function (errormessage) {
+                $('#loading').hide();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

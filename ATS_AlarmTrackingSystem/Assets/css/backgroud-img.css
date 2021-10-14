@@ -1,0 +1,50 @@
+﻿.big-banner {
+    background-image: url('./map-background.jpg');
+}
+.big-full{
+    width: 100%;
+    min-height: 70%;
+
+}
+.back-full{
+    background:#f6fcfc;
+    border-radius: 2px;
+}
+.back-create {
+    background:#f6fcfc;
+}
+.bif-layout {
+    background-image: url('toan-cau.jpg');
+}
+.baner_img {    
+    background-image: url('crc-5.jpg');
+}
+.langClass {
+    text-align: right;
+}
+.langImg {
+    height: 25px;
+    border: 1px solid #fff;
+    padding: 0;
+    border-radius: 5px;
+}
+.textDesign{
+    font-weight: bold;
+    color: #1299cc;
+    font-size: 50px;
+}
+.backNote{
+    border-radius: 2px;
+}
+.fa-envelope-o:before {
+    content: "\f003";
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+

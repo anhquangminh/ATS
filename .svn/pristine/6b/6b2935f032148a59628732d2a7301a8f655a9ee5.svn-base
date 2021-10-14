@@ -1,0 +1,3 @@
+@using ATS_AlarmTrackingSystem.Areas.HelpPage.ModelDescriptions
+@model SimpleTypeModelDescription
+@Model.Documentation

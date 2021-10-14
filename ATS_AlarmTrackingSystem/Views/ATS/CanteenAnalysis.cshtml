@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "CanteenAnalysis";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+<link href="~/Assets/css/tree.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">CANTEEN ANALYSIS</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool"> <i class="nav-icon fas fa-map-marked"></i></button> &nbsp; CANTEEN ANALYSIS</h3>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <!--Search condition-->
+                    <div class="form-group search-group" style="margin-bottom:0;">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">CANTEEN ANALYSIS</legend>
+                                @using (Html.BeginForm("CanteenAnalysis", "ATS", FormMethod.Post, new { enctype = "multipart/form-data", @class = "col-12" }))
+                                {
+                                    <div class="row col-12">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="">Date Start/ Thời gian bắt đầu </label>
+                                                <input type="date" class="form-control" id="datestart" name="datestart">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="">Date End/ Thời gian kết thúc</label>
+                                                <input type="date" class="form-control" id="dateend" name="dateend">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="submit" class="form-control btn btn-primary">
+                                                    <i class="fas fa-search"></i>&nbsp;
+                                                    Download/ Tải về
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script type="text/javascript">
+        alert("@ViewBag.Message");
+    </script>
+}
+

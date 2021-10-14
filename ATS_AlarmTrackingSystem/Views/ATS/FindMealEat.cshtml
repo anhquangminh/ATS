@@ -1,0 +1,205 @@
+﻿
+@{
+    ViewBag.Title = "FindMealEat";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Check location canteen </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool" onClick="action();"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Check location canteen </legend>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label>Emp No/ Mã thẻ</label>
+                                            <input type="text" class="form-control" id="emp" name="emp" placeholder="V0979820">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="">&nbsp;</label>
+                                            <button type="button" class="form-control btn btn-primary" onclick="FindMealEat();">
+                                                <i class="fas fa-search"></i>&nbsp;
+                                                Search/ Tìm kiếm
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row table-responsive" style="display:none" id="tbodySearch">
+                                    <table id="tbSearch" class="table table-bordered border-primary">
+                                        <tbody>
+                                            <tr class="border text-center table-primary">
+                                                <th class="border">類型/ Loại hình</th>
+                                                <th class="text-center" colspan="8">詳細/ Chi tiết</th>
+                                            </tr>
+                                            <tr class="border ">
+                                                <td class="border font-weight-bold" rowspan="3">吃/ Ăn </td>
+                                                <td class="border" colspan="1">
+                                                    Area code /  Mã QR
+                                                </td>
+                                                <td class="border" colspan="1">
+                                                    @*@Model.MealBatch1*@
+                                                    <p id="MealBatch1"></p>
+                                                </td>
+                                                <td class="border" colspan="1">
+                                                    @*@Model.MealBatch2*@
+                                                    <p id="MealBatch2"></p>
+                                                </td>
+                                                <td class="border" colspan="1">
+                                                    <p id="id=" MealBatch3""></p>
+                                                    @*@Model.MealBatch3*@
+                                                </td>
+                                                <td class="border" colspan="1">
+                                                    <p id="MealBatch4"></p>
+                                                    @*@Model.MealBatch4*@
+                                                </td>
+                                            </tr>
+                                            <tr class="border ">
+                                                <td class="border">
+                                                    <p id="IcivetBu">
+
+                                                    </p>
+                                                </td>
+                                                <td class="border">
+                                                    <p id="MealTime1"></p>
+                                                    @*@Model.MealTime1*@
+                                                </td>
+                                                <td class="border" id="MealTime2">
+                                                    <p id="MealTime2"></p>
+                                                    @*@Model.MealTime2*@
+                                                </td>
+                                                <td class="border" id="MealTime3">
+                                                    <p id="MealTime3"></p>
+                                                    @*@Model.MealTime3*@
+                                                </td>
+                                                <td class="border" id="MealTime4">
+                                                    <p id="MealTime4"></p>
+                                                    @*@Model.MealTime4*@
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border" colspan="8">
+                                                    @*@Model.QRMeal*@
+                                                    <p id="QRMeal"></p>
+                                                </td>
+                                            </tr>
+                                            <tr class="border">
+                                                <td class="border font-weight-bold"> 住 / Ở KTX</td>
+                                                <td class="border" colspan="8"><p id="QRLive"></p> @*@Model.QRLive*@</td>
+                                            </tr>
+                                            <tr class="border">
+                                                <td class="border font-weight-bold">去/ Đi BUS</td>
+                                                <td class="border" colspan="8"><p id="QRMove"></p> @*@Model.QRMove*@</td>
+                                            </tr>
+                                            <tr class="border">
+                                                <td class="border font-weight-bold">工作/ Vị trí làm việc</td>
+                                                <td class="border" colspan="8"> <p id="QRWork"></p>@*Model.QRWork*@</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-group result" id="nodata" style="display:none;">
+                                <div class="col-md-12 message-area">
+                                    <i class="fas fa-warning fa-bullhorn"></i>&nbsp;&nbsp; <span id="message">No search results . &nbsp;&nbsp;&nbsp;&nbsp;Không tìm thấy kết quả nào.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          </div>
+     </section>
+</div>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+
+<script type="text/javascript">
+    function validate() {
+        var isValid = true;
+        if ($('#emp').val().trim() == "") {
+            $('#emp').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#emp').css('border-color', 'lightgrey');
+        }
+        return isValid;
+    }  
+
+    function FindMealEat() {
+        var res = validate();
+        if (res == false) {
+            return false;
+        }
+        $('#loadingsearch').show();
+        var emp = $('#emp').val();
+        $.ajax({
+            url: "/api/findMealEatdata?emp=" + emp,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                if (result != null) {
+                    $('#MealBatch1').text(result[0].MealBatch1);
+                    $('#MealBatch2').text(result[0].MealBatch2);
+                    $('#MealBatch3').text(result[0].MealBatch3);
+                    $('#MealBatch4').text(result[0].MealBatch4);
+                    $('#MealTime1').text(result[0].MealTime1);
+                    $('#MealTime2').text(result[0].MealTime2);
+                    $('#MealTime3').text(result[0].MealTime3);
+                    $('#MealTime4').text(result[0].MealTime4);
+                    $('#QRMeal').text(result[0].QRMeal);
+                    $('#QRLive').text(result[0].QRLive);
+                    $('#QRMove').text(result[0].QRMove);
+                    $('#QRWork').text(result[0].QRWork);
+                    $('#IcivetBu').text(result[0].IcivetBu);
+
+                    $('#nodata').hide();
+                    $('#tbodySearch').show();
+                    
+                } else {
+                    $('#tbodySearch').hide();
+                    $('#nodata').show();
+                }
+                $('#loadingsearch').hide();
+            },
+            error: function (errormessage) {
+                $('#loadingsearch').hide();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

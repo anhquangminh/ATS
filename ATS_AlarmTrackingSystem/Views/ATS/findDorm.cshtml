@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "findDorm";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Find dorm room </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool"> <i class="nav-icon fas fa-search"></i></button> &nbsp; Search</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <div class="form-group">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Find dorm room/ Tìm phòng ktx</legend>
+                                <div class="row">
+                                    <div class="row col-12">
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Emp No/ Mã thẻ</label>
+                                                <input type="text" class="form-control" id="emp" name="emp" placeholder="V0979820">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="button" class="form-control btn btn-primary" onclick="findDorm()">
+                                                    <i class="fas fa-search"></i>&nbsp;
+                                                    Search/ Tìm kiếm
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" style="display:none;" id="downloadsearch">
+                                            <div class="form-group">
+                                                <label for="">&nbsp;</label>
+                                                <button type="submit" class="form-control btn btn-success" onclick="exportTableToExcel('tbSearch', 'Excelfile')">
+                                                    <i class="fas fa-cloud-download-alt"></i>&nbsp;
+                                                    Download/ Tải xuống
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div style="text-align:center;align-content:center;display:none;" id="loadingsearch">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="row table-responsive">
+                                    <table id="tbSearch" class="table table-bordered border-primary">
+                                        <tbody id="tbodySearch"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                            <br />
+                            <div class="form-group result" id="nodata" style="display:none;">
+                                <div class="col-md-12 message-area">
+                                    <i class="fas fa-warning fa-bullhorn"></i>&nbsp;&nbsp; <span id="message">No search results . &nbsp;&nbsp;&nbsp;&nbsp;Không tìm thấy kết quả nào.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+
+<script type="text/javascript">
+    function validatesearch() {
+        var isValid = true;
+        if ($('#emp').val().trim() == "") {
+            $('#emp').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#emp').css('border-color', 'lightgrey');
+        }
+        return isValid;
+    }
+
+    function findDorm() {
+        //Check input
+        var res = validatesearch();
+        if (res == false) {
+            return false;
+        }
+        //Get search conditions
+        var emp = $('#emp').val();
+
+        $('#loadingsearch').show();
+        $.ajax({
+            url: "/api/getDormRoom?emp=" + emp ,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    var html = '';
+                    var position = data[0].RoomCode;
+                    const arr = position.split('-');
+                    var site = arr[0];
+                    var building = arr[1];
+                    var room = arr[2];
+                    html += '<tr class="bg-primary"><td>Site/ khu vực</td><td> Building/ Tòa nhà</td><td> Room/ Số phòng </td></tr>';
+                    html += '<tr><td>' + site + '</td><td> ' + building + '</td><td> ' + room + ' </td></tr>';
+                    html+= '<tr class="table-primary"><td>Emp No/ Mã thẻ</td><td>Name/ Tên</td><td>Position/ Vị trí </td></tr>';
+                    $.each(data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.EmpNo + '</td>';
+                        html += '<td>' + item.EmpName + '</td>';
+                        html += '<td>' + item.RoomCode + '</td>';
+                        html += '</tr>';
+                    });
+                    $('#tbodySearch').html(html);
+                    $('#downloadsearch').show();
+                    $('#loadingsearch').hide();
+                } else {
+                    $('#loadingsearch').hide();
+                    $('#nodata').show();
+                    $('#tbodySearch').remove();
+                }
+
+            },
+            error: function (error) {
+                $('#loadingsearch').hide();
+                alert('No find building room');
+            },
+        });
+
+        
+    }
+
+    function exportTableToExcel(tableID, filename) {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById(tableID);
+
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+        tab_text = tab_text.replace(/<img[^>]*>/gi, "");
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, filename);
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        return (sa);
+    }
+
+</script>

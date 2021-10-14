@@ -1,0 +1,89 @@
+﻿<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>IT-Web Link </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @Scripts.Render("~/bundles/modernizr")
+
+    @*datatable*@
+    <script src="~/Areas/Link/Assets/datable/jquery-3.5.1.js"></script>
+    <link href="~/Areas/Link/Assets/datable/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Areas/Link/Assets/scss/Icons/bootstrap-icons.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+    <style type="text/css">
+        label {
+            font-weight: 300;
+        }
+
+        legend {
+            background-color: gray;
+            color: white;
+        }
+        .navbar-brand{
+            color:white;
+        }
+        nav a {
+            color: white;
+        }
+        nav a:hover {
+            color: #cbffd4;
+        }
+    </style>
+    <div class="container-fluid" style=" margin: 0px; color: white; background-color: #3a5b98!important;">
+        <div class="container">
+            <nav class="navbar navbar-expand-md " style="color:white;">
+                <a class="navbar-brand" href="@Url.Action("index","Manager")" style="font-size: medium;"> <span class="bi-house"></span> Home </a>
+                @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>*@
+
+                <div class="collapse navbar-collapse"  style="color:white;">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("CreateLink","Manager")"> <span class="bi-clipboard-check"></span> Add new link </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("CreateDepartment","Manager")"><span class="bi-currency-exchange"></span> Add Department </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            @if (System.Web.HttpContext.Current.Session["Level"].ToString() == "2")
+                            {
+                                <a class="nav-link" role="button" aria-haspopup="true" aria-expanded="false" href="@Url.Action("AddAcount","Manager")"> Add Acount</a>
+                            }
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <label>Hello : @System.Web.HttpContext.Current.Session["PublicName"].ToString()</label>
+                        &nbsp;&nbsp;&nbsp;
+                        @*<button class="btn btn-outline-success my-2 my-sm-0" type="submit"><a href="@Url.Action("Logout", "Home")">Logout</a></button>*@
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="location.href='@Url.Action("Logout", "Home1")';return false;">Logout</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <br />
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+   
+
+
+    @*datable*@
+    <script src="~/Areas/Link/Assets/datable/jquery-3.5.1.js"></script>
+    <script src="~/Areas/Link/Assets/datable/jquery.dataTables.min.js"></script>
+
+</body>
+
+</html>

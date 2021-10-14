@@ -1,0 +1,542 @@
+﻿
+@{
+    ViewBag.Title = "TBView";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+@using ATS_AlarmTrackingSystem.Models;
+@using System.Data;
+@{
+    ViewBag.Title = "TBView";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+@{
+    Cantenhelper helper = new Cantenhelper();
+    DataTable tb = helper.queryDatatable("select * from  [tbPosition_Config_Q] where Group_Pos='2' ");
+
+    DataTable tbx = helper.queryDatatable("SELECT max(Position_intX) as X FROM tbPosition_Config_Q where Group_Pos='2'");
+    DataTable tby = helper.queryDatatable("SELECT max(Position_intY) as Y FROM tbPosition_Config_Q where Group_Pos='2'");
+    int x = int.Parse(tbx.Rows[0][0].ToString());
+    int y = int.Parse(tby.Rows[0][0].ToString());
+
+}
+
+@*<link href="~/Assets/DataTable/multi_freezer/my.css" rel="stylesheet" />*@
+<style>
+    .f0{
+        background-color:red;
+        color:white;
+    }
+    .f1 {
+        background-color: yellow;
+        color:black;
+    }
+    .f2 {
+        background-color: blue;
+        color:white;
+    }
+    .f3 {
+        background-color: black;
+        color: white;
+    }
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table th {
+        font-size: 15px;
+        vertical-align: middle;
+        text-align: center;
+        /*color: white;*/
+    }
+
+    .ul li {
+        border: 1px solid Cyan;
+        text-align: center;
+        vertical-align: middle;
+        margin: 2px 2px 2px 2px;
+    }
+
+    .dtHorizontalVerticalExampleWrapper {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    #dtHorizontalVerticalExample th, td {
+        white-space: nowrap;
+    }
+
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+    }
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Find people stay near </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+
+        <div class="row" style="margin:10px; margin-bottom:0px;">
+            <div class="card card-info" style="width:100%;">
+                <div class="card-header">
+                    <h3 class="card-title">Find & Config</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <div class=" p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Find position F0/ Tìm vị trí F0</legend>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label>Emp/ Mã thẻ</label>
+                                            <input type="text" class="form-control" id="emp" placeholder="V0939994">
+                                        </div>
+                                        <div class="form-group" style="margin-left:5px;margin-right:5px;">
+                                            <label>Date/ Thời gian</label>
+                                            <input type="date" class="form-control" id="datestart" />
+                                        </div>
+                                        @*<div class="form-group">
+                                            <label>Meal eat/ Bữa ăn </label>
+                                            <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectmeal">
+                                                <option value="1">Breakfast / Bữa sáng</option>
+                                                <option value="2">Lunch / Bữa trưa</option>
+                                                <option value="3">Dinner / Bữa tối</option>
+                                                <option value="4">Super / Bữa ăn đêm</option>
+                                            </select>
+                                        </div>*@
+                                        <div class="form-group" style="margin-left:5px;">
+                                            <label>&nbsp;</label>
+                                            <button class="btn  btn-outline-danger form-control" onclick="searchPosday()">Find Position/ Tìm</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group col-6" id="option" style="display:none;">
+                            <div class=" p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Config Range/ Thiết lập khoảng cách</legend>
+                                    <div class="row" style="text-align:center;align-content:center;margin:auto;">
+                                        <div class="form-group">
+                                            <label>Choose F1</label>
+                                            <button class="f1 btn form-control" onclick="chosecolor('f1')">
+                                                F1
+                                                <i class="fas fa-star" style="color:red;display:none;" id="startf1" ></i>
+                                            </button>
+                                        </div>
+                                        <div style="margin-left:10px;margin-right:10px;">
+                                            <label>Choose F2</label>
+                                            <button class="f2 btn form-control" onclick="chosecolor('f2')">
+                                                F2
+                                                <i class="fas fa-star" style="color:red;display:none;" id="startf2"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Choose F3</label>
+                                            <button class="f3 btn form-control" onclick="chosecolor('f3')">
+                                                F3
+                                                <i class="fas fa-star" style="color:red;display:none;" id="startf3"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-group" style="margin-left:20px">
+                                            <label>&nbsp; </label>
+                                            <button class="btn btn-outline-primary form-control" onclick="check()">Check now/ kiểm tra</button>
+                                        </div>
+                                        <div class="form-group" style="margin-left:20px">
+                                            <label>&nbsp; </label>
+                                            <button class="btn btn-outline-success form-control" onclick="restart()">Refresh/ Làm mới</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row table-responsive bg-white" id="divlayout" style="margin-left: 10px; margin-right: 10px; border: 1px solid green; max-height: 700px; border-radius: 5px;">
+                <table id="tblayout" data-scroll-height="500" class="table table-bordered table-sm " cellspacing="0"
+                       width="100%">
+                    <tbody>
+                        @{
+                            int[,] arr = new int[y, x];
+                            for (int i = 0; i < arr.GetLength(0); i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < arr.GetLength(1); j++)
+                                    {
+                                        for (int a = 0; a < tb.Rows.Count; a++)
+                                        {
+                                            if (int.Parse(tb.Rows[a]["Position_intX"].ToString()) == j && int.Parse(tb.Rows[a]["Position_intY"].ToString()) == i)
+                                            {
+                                                if (tb.Rows[a]["Name_Position"].ToString() == "N/A")
+                                                {
+                                                    <td style="width:100px;height:30px;"></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><button onclick="action('@tb.Rows[a]["Name_Position"].ToString()')" class="btn btn-sm btn-outline-success btn-mi" id="@tb.Rows[a]["Name_Position"].ToString()">@tb.Rows[a]["Name_Position"].ToString()</button></td>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-body row" style="margin:10px;" id="tbResult" >
+            <button class="btn btn-default" style="float:right;margin-bottom:10px;" onclick="exportTableToExcel('tbresult','ok')">Download excel</button>
+            <div class="row table-responsive">
+                <table class="table table-bordered" id="tbresult">
+                    <thead>
+                        <tr class="table-primary">
+                            <td>Emp No/ Mã thẻ</td>
+                            <td>Name/ Tên</td>
+                            <td>Position/ Vị trí </td>
+                            <td>Time/ Thời gian</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody id="tf1"></tbody>
+                    <tbody id="tf2"></tbody>
+                    <tbody id="tf3"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+</div>
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+
+<script>
+    var PosF0 = '';
+    var empname = '';
+    var time = '';
+    var f1 = '';
+    var f2 = '';
+    var f3 = '';
+
+    function restart() {
+        f1 = '';
+        f2 = '';
+        f3 = '';
+        $("table button").removeClass("f1");
+        $("table button").removeClass("f2");
+        $("table button").removeClass("f3");
+    }
+
+    function validatesearch() {
+        var isValid = true;
+        if ($('#emp').val().trim() == "") {
+            $('#emp').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#emp').css('border-color', 'lightgrey');
+        }
+        if ($('#datestart').val().trim() == "") {
+            $('#datestart').css('border-color', 'Red');
+            isValid = false;
+        }
+        else {
+            $('#datestart').css('border-color', 'lightgrey');
+        }
+        return isValid;
+    }
+
+    function searchFO() {
+        var postion = $('#input').val();
+        $.ajax({
+            url: "/ATS/PositonF0?postion=" + postion,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    var posRoot;
+                    $.each(data, function (key, item) {
+                        if (item.Name_Positon != 'N/A' && item.Patient == 'F0') {
+                            document.getElementById(item.Name_Positon).classList.add('btn-danger');
+                            posRoot = item.Name_Positon;
+                        }
+                        if (item.Name_Positon != 'N/A' && item.Patient == 'F1') {
+                            document.getElementById(item.Name_Positon).classList.add('btn-warning');
+
+                        }
+                        if (item.Name_Positon != 'N/A' && item.Patient == 'F2') {
+                            document.getElementById(item.Name_Positon).classList.add('btn-primary');
+
+                        }
+                        if (item.Name_Positon != 'N/A' && item.Patient == 'F3') {
+                            document.getElementById(item.Name_Positon).classList.add('btn-dark');
+
+                        }
+                    });
+                    var elmnt = document.getElementById(posRoot);
+                    elmnt.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center"
+                    });
+                } else {
+
+                }
+
+            },
+            error: function (error) {
+
+                alert(error);
+            },
+        });
+    }
+
+    var color = '';
+    function chosecolor(idcolor) {
+        color = idcolor;
+        if (color == 'f1') {
+            $('#startf1').show();
+            $('#startf2').hide();
+            $('#startf3').hide();
+        }
+        if (color == 'f2') {
+            $('#startf2').show();
+            $('#startf1').hide();
+            $('#startf3').hide();
+        }
+        if (color == 'f3') {
+            $('#startf3').show();
+            $('#startf2').hide();
+            $('#startf1').hide();
+        }
+    }
+
+    function action(id) {
+        if (color != '' && PosF0 != '') {
+            document.getElementById(id).classList.add(color);
+            if (color == 'f1') {
+                f1 += id + ',';
+            }
+            if (color == 'f2') {
+                f2 += id + ',';
+            }
+            if (color == 'f3') {
+                f3 += id + ',';
+            }
+        }
+
+    }
+
+    //lay theo bưa ăn
+    function searchPosF0() {
+        var res = validatesearch();
+        if (res == false) {
+            return false;
+        }
+        var emp = $('#emp').val();
+        var datestart = $('#datestart').val();
+        var selectmeal = $('#selectmeal').val();
+        $.ajax({
+            url: "/api/getPosF0?dateSearch=" + datestart + "&emp=" + emp + "&EatTime=" + selectmeal,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                if (result != null) {
+                    PosF0 = result.position;
+                    time = result.time;
+                    empname = result.empname;
+
+                    $("button").removeClass("f0");
+                    $('#' + PosF0).addClass("f0");
+
+                    var elmnt = document.getElementById(PosF0);
+                    elmnt.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center"
+                    });
+                    $('#option').show();
+                } else {
+                    alert("No find position ");
+                    $('#option').hide();
+                }
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $('#option').hide();
+            }
+        });
+
+    }
+
+    //lay 1 ngay
+    function searchPosday() {
+        var res = validatesearch();
+        if (res == false) {
+            return false;
+        }
+        $("table button").removeClass("f0");
+        $("table button").removeClass("f1");
+        $("table button").removeClass("f2");
+        $("table button").removeClass("f3");
+        var emp = $('#emp').val();
+        var datestart = $('#datestart').val();
+        $.ajax({
+            url: "/api/getPosF0Day?dateStart=" + datestart + "&emp=" + emp,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                if (result != null) {
+                    PosF0 = result.position;
+                    time = result.time;
+                    empname = result.empname;
+
+                    $("button").removeClass("f0");
+                    $('#' + PosF0).addClass("f0");
+
+                    var elmnt = document.getElementById(PosF0);
+                    elmnt.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center"
+                    });
+                    $('#option').show();
+                } else {
+                    alert("No find position ");
+                    $('#option').hide();
+                }
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+                $('#option').hide();
+            }
+        });
+
+    }
+
+    function check() {
+        $('tbResult').show();
+        var count = 0;
+        if (PosF0 != '' && time != '' && f1 != '') {
+            getName(time, f1, "F1", "tf1");
+            count = 1;
+        }
+        if (PosF0 != '' && time != '' && f2 != '') {
+            getName(time, f2, "F2", "tf2");
+            count = 1;
+        }
+        if (PosF0 != '' && time != '' && f3 != '') {
+            getName(time, f3, "F3", "tf3");
+            count = 1;
+        }
+
+        if (count = 1) {
+            goToByScroll('tbresult');
+        }
+
+    }
+
+    function getName(timef0, pos, Patient, tbody) {
+        $.ajax({
+            url: "/api/getPosName?timef0=" + timef0 + "&pos=" + pos + "&Patient=" + Patient,
+            typr: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                if (data != "" && data != null) {
+                    var html = '';
+                    $.each(data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.empno + '</td>';
+                        html += '<td>' + item.empname + '</td>';
+                        html += '<td>' + item.position + '</td>';
+                        html += '<td>' + item.time + '</td>';
+                        html += '<td>' + item.ff + '</td>';
+                        html += '</tr>';
+                    });
+                    //tableBody = $("table tbody");
+                    //tableBody.append(html);
+                    $('#' + tbody).html(html);
+                }
+            },
+            error: function (errormessage) {
+                console.log(errormessage.responseText);
+            }
+        });
+
+    }
+
+    function goToByScroll(id) {
+        $('html,body').animate({
+            scrollTop: $("#" + id).offset().top
+        }, 'slow');
+    }
+
+    function exportTableToExcel(tableID, filename) {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById(tableID);
+
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+        tab_text = tab_text.replace(/<img[^>]*>/gi, "");
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, filename);
+        }
+        else
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        return (sa);
+    }
+</script>
+
+
+

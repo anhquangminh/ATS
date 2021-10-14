@@ -1,0 +1,281 @@
+﻿@{
+    ViewBag.Title = "InsertScanPort";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+@model IEnumerable<ATS_AlarmTrackingSystem.Models.ScanPort>
+<style>
+    .input-group {
+        margin-bottom: 5px;
+    }
+
+    .input-group-text {
+        font-size: 12px;
+    }
+
+    .lbtxt {
+        font-size: 12px;
+    }
+
+    .input-group-prepend {
+        width: 110px;
+    }
+
+    .input-group-text {
+        min-width: 100%;
+    }
+</style>
+<link href="~/Assets/css/loader.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">UPLOAD FILE EXCEL INFOR USER SCAN PORT</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="row" style="margin:10px; margin-bottom:0px;" id="InsertExcel">
+            <div class="card" style="width:100%;">
+                <div class="card-header " style="background-color: #17a2b8 !important;color:white;">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload file excel infor user
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="w3-container" style="display:none;width:100%;" id="upload">
+                            <div class="w3-light-grey">
+                                <div id="myBar" class="w3-container w3-green" style="height:30px;width:10%">
+                                    <p id="myP" style="margin:4px;"><span id="demo">0</span> %</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-7">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Import excel file infor user scan port / Tải tệp excel thông tin  </legend>
+                                    @using (Html.BeginForm("InsertScanPort", "ATS", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="control-label col-md-12 ">Choose file/ Chọn tệp</label>
+                                                <input name="file" type="file" class="form-control" style="padding-top: 3px; padding-left: 3px;" />
+                                            </div>
+                                            <div class="">
+                                                <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                                <input type="submit" style="display:none" id="uploadfile">
+                                                <input onclick="move();this.disabled='true'"  class="col-12 btn-outline-primary form-control" value="Upload/ Tải lên" style="margin-top:7px;" />
+                                            </div>
+                                        </div>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <div class="p-2" style="margin-bottom: 0;">
+                                <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                    <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Download format/ Tải xuống file mẫu </legend>
+                                    <div class="row" style="margin-bottom: 7px; margin-left:10px;">
+                                        <div class="">
+                                            <label class="control-label col-md-12"> <span style="display:none"></span> </label>
+                                            <a class="col-12 btn-outline-primary form-control" href='@Url.Action("DownloadFileScanPort", "ATS")'>Download/ Tải xuống</a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left col -->
+                        <section class="col-lg-12 connectedSortable">
+                            <!-- Custom tabs (Charts with tabs)-->
+                            <div class="card" >
+                                <div class="card-header" style="background-color: #1686ff; color: white;">
+                                    <h3 class="card-title"> <i class="fas fa-address-book mr-1"></i> List infor/ Danh sách thông tin </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="overflow-wrap:break-word">
+                                    <div style="text-align:center;align-content:center;display:none;" id="loading">
+                                        <div class="spinner-border" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content p-0 table-responsive" id="more_infor">
+                                        <table class="table table-bordered table-hover" id="table_ScanPort" style="font-family: arial;font-size:12px;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">MaThe</th>
+                                                    <th scope="col">HoTen</th>
+                                                    <th scope="col">Site</th>
+                                                    <th scope="col">PhanNhan</th>
+                                                    <th scope="col">BU</th>
+                                                    <th scope="col">CFT</th>
+                                                    <th scope="col">BoPhan</th>
+                                                    <th scope="col">XuongLV</th>
+                                                    <th scope="col">ViTriQuet</th>
+                                                    <th scope="col">NguoiTaiLen</th>
+                                                    <th scope="col">NgayTaiLen</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                @*@foreach (var item in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.MaThe</td>
+                                                            <td>@item.HoTen</td>
+                                                            <td>@item.Site</td>
+                                                            <td>@item.PhanNhan</td>
+                                                            <td>@item.BU</td>
+                                                            <td>@item.CFT</td>
+                                                            <td>@item.BoPhan</td>
+                                                            <td>@item.XuongLV</td>
+                                                            <td>@item.ViTriQuet</td>
+                                                            <td>@item.NguoiTaiLen</td>
+                                                            <td>@item.NgayTaiLen</td>
+                                                        </tr>
+                                                    }*@
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>MaThe</th>
+                                                    <th>HoTen</th>
+                                                    <th>Site</th>
+                                                    <th>PhanNhan</th>
+                                                    <th>BU</th>
+                                                    <th>CFT</th>
+                                                    <th>BoPhan</th>
+                                                    <th>XuongLV</th>
+                                                    <th>ViTriQuet</th>
+                                                    <th>NguoiTaiLen</th>
+                                                    <th>NgayTaiLen</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div><!-- /.card-body -->
+
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+    
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script type="text/javascript">
+
+    function move() {
+        $('#uploadfile').click();
+        document.getElementById("upload").style.display = 'block';
+        var elem = document.getElementById("myBar");
+        var width = 10;
+        var id = setInterval(frame, 1000);
+        function frame() {
+            if (width >= 90) {
+                //clearInterval(id);
+                //document.getElementById("myP").className = "w3-animate-opacity";
+                //document.getElementById("myP").innerHTML = "Successfully uploaded";
+                //document.getElementById("myP").style.textAlign = "Center";
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                var num = width;
+                num = num.toFixed(0)
+                document.getElementById("demo").innerHTML = num;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        loadData();
+        
+    });
+    //Load Data function
+    function loadData() {
+        $('#loading').show();
+        $('#more_infor').hide();
+        $.ajax({
+            url: "/api/ListScanPort",
+            typr: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '';
+                $.each(result, function (key, item) {
+                    html += '<tr>';
+                    html += '<td>' + item.MaThe + '</td>';
+                    html += '<td>' + item.HoTen + '</td>';
+                    html += '<td>' + item.Site + '</td>';
+                    html += '<td>' + item.PhanNhan + '</td>';
+                    html += '<td>' + item.BU + '</td>';
+                    html += '<td>' + item.CFT + '</td>';
+                    html += '<td>' + item.BoPhan + '</td>';
+                    html += '<td>' + item.XuongLV + '</td>';
+                    html += '<td>' + item.ViTriQuet + '</td>';
+                    html += '<td>' + item.NguoiTaiLen + '</td>';
+                    html += '<td>' + item.NgayTaiLen + '</td>';
+                    html += '</tr>';
+                });
+                $('#tbody').html(html);
+
+                $('#loading').hide();
+                $('#more_infor').show();
+
+                $('#table_ScanPort').DataTable({
+                    initComplete: function () {
+                        this.api().columns().every(function () {
+                            var column = this;
+                            var select = $('<select><option value=""></option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+                                    column
+                                        .search(val ? '^' + val + '$' : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>')
+                            });
+                        });
+                    }
+                });
+            },
+            error: function (errormessage) {
+                $('#loading').hide();
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>
+

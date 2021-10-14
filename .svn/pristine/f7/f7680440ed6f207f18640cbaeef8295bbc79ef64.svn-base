@@ -1,0 +1,250 @@
+﻿//Load Data in Table when documents is ready
+
+$(document).ready(function () {
+    //loadData();
+    
+});
+
+function LoadDataTable() {
+    $(document).ready(function () {
+        $('#table_message').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(0
+                                ,$(this).val()
+                            );
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+    //$('#table_message').dataTable({
+    //    destroy: true,
+    //});
+}
+//Load Data function  
+function loadData() {
+    $.ajax({
+        url: "api/getAllData",
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            var html = '';
+            $.each(result, function (key, item) {
+                html += '<tr>';
+                html += '<td>' + item.ip_address + '</td>';
+                html += '<td>' + item.owner_emp + '</td>';
+                html += '<td>' + item.owner_name + '</td>';
+                html += '<td>' + item.building + '</td>';
+                html += '<td>' + item.team + '</td>';
+                html += '<td>' + item.emp_user + '</td>';
+                html += '<td>' + item.level_user + '</td>';
+                html += '<td>' + item.description + '</td>';
+                html += '<td>' + item.status + '</td>';
+                html += '<td>' + item.time_start + '</td>';
+                html += '<td>' + item.time_going + '</td>';
+                html += '<td>' + item.time_end + '</td>';
+                html += '<td style="text-align:center;" ><a href="#" onclick="return GetbyOwnerID(\'' + item.id_ats + '\')"><i class="fas fa-edit"></i></a></td>';
+                html += '<td style="text-align:center;"> <a href="#" onclick="Delele(\'' + item.id_ats + '\')"><i class="far fa-trash-alt"></i></a> </td>';
+                html += '</tr>';
+            });
+            $('#tbody').html(html);
+            LoadDataTable();
+
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+
+    var table = $('#example').DataTable({
+        ajax: "data.json"
+    });
+
+    table.ajax.url('newData.json').load();
+}
+
+//Add Data Function   
+function Add() {
+    var res = validate();
+    if (res == false) {
+        return false;
+    }
+    var empObj = {
+        ip_address: $('#ip_address').val(),
+        building: $('#building').val(),
+        team: $('#team').val(),
+        emp_user: $('#emp_user').val(),
+        description: $('#description').val(),
+    };
+    $.ajax({
+        url: "../../api/sendData",
+        data: JSON.stringify(empObj),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            LoadDataTable();
+            $('#myModal').modal('hide');
+            alert(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
+//Function for getting the Data Based upon Employee ID  
+function GetbyOwnerID(emp) {
+    $('#myModalLabel').text('Update infor owner');
+    $('#emp').css('border-color', 'lightgrey',);
+    $("#emp").prop('disabled', true);
+    $('#name_cn').css('border-color', 'lightgrey');
+    $('#building').css('border-color', 'lightgrey');
+    $('#team').css('border-color', 'lightgrey');
+    $.ajax({
+        url: "/ATS/GetbyOwnerID?emp=" + emp,
+        typr: "GET",
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        success: function (result) {
+            $('#emp').val(result[0].emp);
+            $('#name_vn').val(result[0].name_vn);
+            $('#building').val(result[0].building);
+            $('#team').val(result[0].team);
+
+            $('#myModal').modal('show');
+            $('#btnUpdate').show();
+            $('#btnAdd').hide();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return false;
+}
+
+//function for updating employee's record  
+function UpdateOwner() {
+    var res = validate();
+    if (res == false) {
+        return false;
+    }
+    var empObj = {
+        emp: $('#emp').val(),
+        name_vn: $('#name_vn').val(),
+        building: $('#building').val(),
+        team: $('#team').val(),
+    };
+    $.ajax({
+        url: "/ATS/UpdateOwner",
+        data: JSON.stringify(empObj),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            loadData();
+            $('#myModal').modal('hide');
+            $('#emp').val("");
+            $('#name_vn').val("");
+            $('#building').val("");
+            $('#team').val("");
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
+//function for deleting employee's record  
+function Delele(emp) {
+    var ans = confirm("Are you sure you want to delete this emp ?");
+    if (ans) {
+        $.ajax({
+            url: "/ATS/Delete?emp=" + emp,
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                loadData();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+}
+
+//Function for clearing the textboxes  
+function clearTextBox() {
+
+    $('#myModalLabel').text('Add new infor owner');
+
+    $("#ip_address").prop('disabled', false);
+    $('#building').val("");
+    $('#team').val("");
+    $('#emp_user').val("");
+    $('#description').val("");
+
+    $('#btnUpdate').hide();
+    $('#btnAdd').show();
+
+    $('#ip_address').css('border-color', 'lightgrey');
+    $('#building').css('border-color', 'lightgrey');
+    $('#team').css('border-color', 'lightgrey');
+    $('#emp_user').css('border-color', 'lightgrey');
+    $('#description').css('border-color', 'lightgrey');
+}
+//Valdidation using jquery  
+function validate() {
+    var isValid = true;
+    if ($('#ip_address').val().trim() == "") {
+        $('#ip_address').css('border-color', 'Red');
+        isValid = false;
+    }
+    else {
+        $('#ip_address').css('border-color', 'lightgrey');
+    }
+
+    if ($('#building').val().trim() == "") {
+        $('#building').css('border-color', 'Red');
+        isValid = false;
+    }
+    else {
+        $('#building').css('border-color', 'lightgrey');
+    }
+
+    if ($('#team').val().trim() == "") {
+        $('#team').css('border-color', 'Red');
+        isValid = false;
+    }
+    else {
+        $('#team').css('border-color', 'lightgrey');
+    }
+
+    if ($('#emp_user').val().trim() == "") {
+        $('#emp_user').css('border-color', 'Red');
+        isValid = false;
+    }
+    else {
+        $('#emp_user').css('border-color', 'lightgrey');
+    }
+    if ($('#description').val().trim() == "") {
+        $('#description').css('border-color', 'Red');
+        isValid = false;
+    }
+    else {
+        $('#description').css('border-color', 'lightgrey');
+    }
+    return isValid;
+}  

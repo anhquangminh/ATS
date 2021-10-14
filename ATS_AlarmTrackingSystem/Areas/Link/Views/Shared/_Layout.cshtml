@@ -1,0 +1,168 @@
+﻿
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>WebCenter - HTML5 Admin Template</title>
+    <meta name="description" content="Web Control - IT Team">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<link href="~/Areas/Link/Assets/css/bootstrap.min.css" rel="stylesheet" />*@
+
+    <link href="~/Areas/Link/Assets/css/main/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/css/main/css.css" rel="stylesheet" />
+
+    <link href="~/Areas/Link/Assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/css/themify-icons.css" rel="stylesheet" />
+    @*<link href="~/Areas/Link/Assets/css/pe-icon-7-stroke.min.css" rel="stylesheet" />*@
+    @*<link href="~/Areas/Link/Assets/css/flag-icon.min.css" rel="stylesheet" />*@
+    <link href="~/Areas/Link/Assets/css/cs-skin-elastic.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/css/style.css" rel="stylesheet" />
+    @*<link href="~/Areas/Link/Assets/css/fullcalendar.min.css" rel="stylesheet" />*@
+
+    <link href="~/Areas/Link/Assets/css/lib/datatable/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/js/slide/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Areas/Link/Assets/scss/Icons/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        .tree ul li:last-child:before {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+
+<body style="font-family:Arial;">
+    <aside id="left-panel" class="left-panel" style="border-right: 1px solid #e8eaef; background-color: #fff;">
+        <nav class="navbar navbar-expand-sm" style="padding:10px;width:100%; font-family:Arial;font-weight:bold;border-radius:0px; border-bottom:1px solid #e8eaef">
+            <div id="main-menu" class=" collapse navbar-collapse" style="padding: 0px;">
+                <ul id="tree2" class="cat-list">
+                    <li class="active btn-group-lg" style="background-color: #2262c6; border-radius: 5px; padding: 8px; width: 100%; box-shadow: 1px 1px 1px 1px #ebf1f3; color: white;">
+                        <a style="margin: 50px;color:white; font-size: 17px; font-family: 'Glyphicons Halflings';" href="@Url.Action("Index", "Home1")"><span class="bi-house"></span> Home </a>
+                    </li>
+                    @foreach (var item in Model)
+                    {
+                        <li>
+                            <a href="@Url.Action("index", "Home1", new { id = item.IDdp }, null)">@item.Name</a>
+                            <ul>
+                                @{
+                                    ((WEBIT_APP.Areas.Link.Controllers.Home1Controller)this.ViewContext.Controller).getSubmenu(@item.IDdp);
+                                }
+
+                                @foreach (WebLink.Models.LinkModel link in Session["submenu"] as List<WebLink.Models.LinkModel>)
+                                {
+                                    <li><a href="@Url.Action("Index", "Home1", new { id = item.IDdp })"> @link.Description</a></li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </nav>
+    </aside>
+    <div id="right-panel" class="right-panel">
+        <!-- Header-->
+        <header id="header" class="header">
+            <div class="top-left">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home1")"><h2 style="margin-top: auto; font-weight: bold;"><img style="max-width: 36px;" src="~/Areas/Link/Assets/images/GCRC.png" /> VN CRC</h2></a>
+                    <a class="navbar-brand hidden" ><h4>VN CRC</h4></a>
+                    @*<a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>*@
+                </div>
+            </div>
+            <div class="top-right">
+                <div class="header-menu">
+                    <div class="header-left" style="padding-top:10px;">
+                        <button class="search-trigger"><i class="fa fa-search"></i></button>
+                        <div class="form-inline">
+                            <form class="search-form">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Search ..." aria-label="Search">
+                                <button class="search-close" type="submit"><i class="fa fa-close"></i></button>
+                            </form>
+                        </div>
+
+                        <div class="dropdown for-notification">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <span class="count bg-danger"></span>
+                            </button>
+
+                        </div>
+
+                        <div class="dropdown for-message">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-envelope"></i>
+                                <span class="count bg-primary"></span>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div class="user-area dropdown float-right">
+                        <a href="@Url.Action("Login", "Home1")" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="user-avatar rounded-circle" src="~/Areas/Link/Assets/images/login.jpg" alt="User Avatar" style="border-radius: 50% !important;">
+                        </a>
+                        <div class="user-menu dropdown-menu">
+                            <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
+                            <a class="nav-link" href="@Url.Action("Login", "Home1")"><i class="fa fa-power -off"></i>Login</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+        <!-- /#header -->
+        <!-- Content -->
+        <!-- Animated -->
+        @RenderBody()
+        <!--<div class="clearfix"></div>
+        <footer class="site-footer">
+            <div class="footer-inner bg-white">
+                <div class="row">
+                    <div class="col-md-8 col-sm-6">-->
+                        @*<marquee style="font-size:16px;color:blue"> Contact help : 26100</marquee>*@
+                    <!--</div>
+                    <div class="col-md-4 col-sm-6 text-right">
+                        Designed by IT Killer
+                    </div>
+                </div>
+            </div>
+        </footer>-->
+    </div>
+
+    <script src="~/Areas/Link/Assets/css/main/jquery-1.11.1.min.js"></script>
+    <script src="~/Areas/Link/Assets/css/main/js.js"></script>
+
+    <script src="~/Areas/Link/Assets/js/main.js"></script>
+    <script src="~/Areas/Link/Assets/js/js.js"></script>
+
+    <script src="~/Areas/Link/Assets/js/jquery.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/slide/jquery.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/slide/bootstrap.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/jquery.matchHeight.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/main.js"></script>
+    <script src="~/Areas/Link/Assets/js/jquery.simpleWeather.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/init/weather-init.js"></script>
+    <script src="~/Areas/Link/Assets/js/moment.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/fullcalendar.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/init/fullcalendar-init.js"></script>
+    <script src="~/Areas/Link/Assets/js/init/fullcalendar-init.js"></script>
+    @*<script src="~/Assets/js/bootstrap.min.js"></script>*@
+
+    @*data table*@
+    <script src="~/Areas/Link/Assets/js/lib/data-table/datatables.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/dataTables.buttons.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/jszip.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/vfs_fonts.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/buttons.html5.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/buttons.print.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/lib/data-table/buttons.colVis.min.js"></script>
+    <script src="~/Areas/Link/Assets/js/init/datatables-init.js"></script>
+
+
+</body>
+</html>
+

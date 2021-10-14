@@ -1,0 +1,471 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>VNIT-RepairCenter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Stylesheets -->
+    <link href="~/Assets/Boostrap/prettyPhoto.css" rel="stylesheet" type="text/css" />
+    <link href="~/Assets/Boostrap/camera.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/Assets/Boostrap/bootstrap.css" rel="stylesheet" />
+    <link href="~/Assets/Boostrap/site.css" rel="stylesheet" />
+    <link REL="SHORTCUT ICON" HREF="~/Assets/Image/icons/favicon.ico">
+
+    <link href="~/Assets/css/backgroud-img.css" rel="stylesheet" />
+    <!-- Font -->
+    <link href="~/Assets/css/card item.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        var arrLang = {
+            'en': {
+                'home': 'Home',
+                'seaRe': 'Search request',
+                'spUser': 'Add Request',
+                'ITMan': 'Login',
+                'conTa': 'Contact',
+                'reqSer': 'Request Service',
+                'pcIn': 'PCInOut website',
+                'goodOut': 'GoodOuts website',
+                'sopIcvet': 'SOP iCvet E-Salaty',
+                'Licht': 'Work Schedule',
+                'searchCon': 'Search For Contact Information',
+                'dowExcel': 'Dowload Excel File Bonepile',
+                'good': 'GoodOut System',
+                'ISC': 'Information Security Management Platform',
+                'crc': 'Command response center',
+                'contact': 'Group contact infomation',
+                'tableau': 'Tableau report VN_IT site',
+                'halo': 'HALO App',
+                'car': 'Booking car',
+                'PC': 'PC in out system',
+                'bonepile': 'Download Bonepile',
+                'ant1': '1.No cybersecurity, no business!　　2.It is our responsibility to protect the intellectual property of the enterprise, customers, and partners.　　3.It is forbidden to install any unauthorized operating system or illegal software.'
+            },
+            'vn': {
+                'home': 'Trang chủ',
+                'seaRe': 'Tra cứu đầu đơn',
+                'spUser': 'Hỗ trợ người dùng',
+                'conTa': 'Liên hệ',
+                'ITMan': 'Đăng nhập',
+                'reqSer': 'Làm đơn yêu cầu',
+                'pcIn': 'Làm đơn mang máy tính ra vào xưởng',
+                'goodOut': 'Mang hàng ra vào xưởng Goodsout Web',
+                'Licht': 'Lịch trực',
+                'good': 'Mang hàng ra ngoài',
+                'sopIcvet': 'Hướng dẫn cài đặt ứng dụng tra cứu bảng lương điện tử iCivet',
+                'searchCon': 'Tra cứu thông tin liên lạc',
+                'dowExcel': 'Dowload Excel File Bonepile',
+                'ISC': 'Nền tảng quản lí bảo mật thông tin',
+                'crc': 'Yêu cầu CRC',
+                'contact': 'Thông tin liên lạc tập đoàn',
+                'tableau': 'Báo biểu nhánh VN',
+                'halo': 'Ứng dụng HALO',
+                'car': 'Đặt xe',
+                'PC': 'Hệ thống mang máy tính ra ngoài',
+                'bonepile': 'Tải dữ liệu Bonepile',
+                'ant1': '1.Không an ninh mạng, không kinh doanh! 2. Trách nhiệm của chúng tôi là bảo vệ tài sản trí tuệ của doanh nghiệp, khách hàng và đối tác. 3. Nghiêm cấm cài đặt bất kỳ hệ điều hành trái phép hoặc phần mềm bất hợp pháp nào.'
+            },
+            'cn': {
+                'home': '首页',
+                'seaRe': '抬头',
+                'spUser': '用户支援',
+                'ITMan': '登录',
+                'conTa': '联系',
+                'reqSer': '申请单',
+                'pcIn': '货物进出厂区申请单',
+                'goodOut': '鴻海科技集團越南廠區物品放行單',
+                'sopIcvet': 'iCivet电子工资单查询应用程序的安装说明',
+                'searchCon': '查找联系信息',
+                'dowExcel': 'Dowload Excel File Bonepile',
+                'Licht': '值班表',
+                'good': '带出物品',
+                'ISC': '信息安全管理平台',
+                'crc': '指挥响应中心',
+                'contact': '集团联系信息',
+                'tableau': 'Tableau 报表 VN_IT Site',
+                'halo': 'Halo 应用',
+                'car': '订车',
+                'PC': '带电脑进去系统',
+                'bonepile': '下载 BONEPILE 资料',
+                'ant1': '1.沒有資安，沒有訂單，沒有飯碗!　　2.善盡責任，保護公司，客戶與合作夥伴的智財　　3.嚴禁私自安裝未經授權的作業系統或私自下載使用未授權的非法軟體'
+            }
+        };
+        $(function () {
+            $('.translate').click(function () {
+                var lang = $(this).attr('id');
+
+                $('.lang').each(function (index, element) {
+                    $(this).text(arrLang[lang][$(this).attr('key')]);
+                });
+            });
+        });
+        $(function () {
+            $('#networkInfo').click(function () {
+                alert('Contact phone:\nB03: 535-19063\nB04: 535-27589 \nB05: 535-27566\nB06:535-19017\nBN3:535-19186\nC03-C02: 535-19236');
+            });
+        });
+        $(function () {
+            $('#sfcInfo').click(function () {
+                alert('Contact phone:\nB03: 535-26655\nB04: 535-27678 \nB05: 535-27687\nB06:535-27678\nBN3:535-19184\nC03-C02: 535-19236');
+            });
+        });
+        $(function () {
+            $('#allpartInfo').click(function () {
+                alert('Contact phone:\nB03: 535-26655\nB04: 535-27678 \nB05: 535-27687\nB06:535-27678\nBN3:535-19184\nC03-C02: 535-19236');
+            });
+        });
+    </script>
+    <style type="text/css">
+        .box_shadow {
+            padding: 0px;
+        }
+
+        .header {
+            padding-top: 20px;
+            padding-right: 5%;
+            padding-left: 5%;
+        }
+
+        .container-fluid {
+            background-color: azure;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="row">
+    <div class="box_shadow">
+
+        <!--header-->
+        <div class="header" style="background-color:#F0FFF0">
+            <div class="wrap">
+                <div class="row right langClass ">
+                    <button class="translate" id="en">
+                        <img src="~/Assets/Image/en.png" class="langImg" />
+                    </button>
+                    <button class="translate" id="vn">
+                        <img src="~/Assets/Image/vi.png" class="langImg" />
+                    </button>
+                    <button class="translate" id="cn">
+                        <img src="~/Assets/Image/zh.png" class="langImg" />
+                    </button>
+                </div>
+                <div class="">
+                    <div class="fleft logo "><img src="~/Assets/Image/GCRC.png" style="width:100px;height:100px;" alt="Logo" /></div>
+                    <div class="navbar fright">
+                        <nav id="main_menu">
+                            <div class="menu_wrap">
+                                <ul class="nav sf-menu">
+                                    <li class="current first"><a href="index.html" class="lang" key="home" style="border-radius: 5px">Home</a></li>
+                                    <li class="first">@Html.ActionLink("List Link", "index", "Home1", new { area = "Link" }, new { @class = "lang", style = "border-radius: 5px" })</li>
+                                    <li class="first" title="Alarm Tracking system">@Html.ActionLink("ATS", "Login", "ATS", new { area = "" }, new { @class = "lang", style = "border-radius: 5px" })</li>
+                                    <li class="sub-menu first">
+                                        <a href="https://gcrc.efoxconn.com/#/CRC" key="spUser" class="lang" style="border-radius: 5px">Add Request</a>
+                                        <ul>
+                                            <li><a href="https://gcrc.efoxconn.com/#/CRC" class="lang" key="reqSer"><span>-</span>New Request</a></li>
+                                            <li><a href="https://gcrc.efoxconn.com/#/CRC" class="lang" key="seaRe"><span>-</span>Search Request</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="sub-menu first">
+                                        @Html.ActionLink("Login", "Login", "Home1", new { area = "Link" }, new { @class = "lang", style = "border-radius: 5px" })
+                                        @*<ul>
+                                            <li> @Html.ActionLink("Login", "Login", "Home1", new { area = "Link" }, new { @class = "lang", style = "border-radius: 5px" })</li>
+                                            <li>
+                                                <a href="https://gcrc.efoxconn.com/#/CRC"><span>-</span>IT Employee</a>
+                                            </li>
+                                            <li><a href="http://10.224.81.136:98/Login"><span>-</span>Check duty list</a></li>
+                                        </ul>*@
+                                    </li>
+                                    <li class="last"><a href="https://gcrc.efoxconn.com/#/CRC" key="conTa" class="lang" style="border-radius: 5px">Contact</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+        </div>
+        <!--//header-->
+        <!--//BODY PAGE1 -->
+        <div class="page_container">
+            <div class="container" style="background-color:#F0FFF0;width:101%;height:800px;text-align:center;color:black;margin-left:1px">
+                <h3 style="font-size: 40px;animation-name: fadeInUpFull;">Help Desk Software for Abnormal Handling and  Connect To IT Service</h3>
+                <h3>Connect to solve problems fastest and conveniently via the software Halo, Email</h3>
+                <div class="halo">
+                    <table>
+                        <tr>
+                            <th style="color:deepskyblue;text-align:center">CRC System</th>
+                            <th></th>
+                            <th style="color:orange;text-align:center">Halo Cloud</th>
+                        </tr>
+                        <tr>
+                            <td>An enterprise grade service desk software that’s feature rich, on-premise</td>
+                            <td> <img src="~/Assets/Image/help-desk-agents.png" style="width:600px" /></td>
+                            <td>
+                                Halo is a free messaging  application that works on mobile and computer platforms, used internally within Foxconn.<br>
+                                Halo is an application released by the IT application development team.
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td><a href="@Url.Action("Create","USER_ISSUE_IT",new {area="User" })" style="font-size: 20px"> Click here to start request service</a></td>
+                            <td></td>
+                            <td><a href="https://appvn2.foxconn.com/" style="font-size: 20px">Click to download Halo Cloud</a></td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!--//end BODY PAGE 1 -->
+        <!--//BODY PAGE2 -->
+        <div class="page_container">
+            <div class="container" style="background-color:white;width:100%;height:900px;text-align:center;color:black;margin-left:-100px">
+                <h3 style="font-size: 40px;animation-name: fadeInUpFull;color:black">Halo cloud application</h3>
+                <p style="font-size: 25px;animation-name: fadeInUpFull;color:black">Halo is a free messaging application that works on mobile and computer platforms</p>
+                <div class="halo">
+                    <table>
+                        <tr>
+                            <td style="color:black;font-size:20px">Used internally within Foxconn</td>
+                            <td style="color:black;font-size:20px">Support handle abnormal quickly</td>
+                            <td style="color:black;font-size:20px">Other function </td>
+                            <td style="color:black;font-size:20px">See the most overview data</td>
+                            <td style="color:black;font-size:20px">Intergrate multi-function </td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/Assets/Image/halo1.png" style="width:310px" /></td>
+                            <td> <img src="~/Assets/Image/halo2.png" style="width:320px" /></td>
+                            <td> <img src="~/Assets/Image/halo3.PNG" style="width:320px" /></td>
+                            <td><img src=" ~/Assets/Image/haloud2.PNG" style="width:310px" /></td>
+                            <td><img src=" ~/Assets/Image/haloud1.PNG" style="width:320px" /></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><a style="color:#00008B;font-size: 20px" href="https://appvn2.foxconn.com/">Click to download HALO APP</a></td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+            <div class="container" style="background-color:#7FFFD4;width:70%;height:2px;text-align:center"></div>
+        </div>
+        <!--//end BODY PAGE 2 -->
+        <br />
+        <!--//BODY PAGE3 -->
+        <div class="page_container">
+            <div class="container" style="background-color:white;width:100%;height:900px;text-align:center;color:black;margin-left:-102px">
+                <header style="font-size: 40px;animation-name: fadeInUpFull;color:black">Helpful help desk software, the way it should be</header>
+                <div class="halo">
+                    <div class="row">
+                        <div class="column">
+                            <h2>With legacy help desks</h2>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <p><img src="~/Assets/Image/crcphone.png" style="width:900px" /></p>
+                            <br />
+                            <h3>Able to find IT : The message is lost, the group is dissatisfied, and the user is frustrated</h3>
+                        </div>
+                        <div class="column">
+                            <h2><img src="~/Assets/Image/crcanduser.png" style="width:900px" /></h2>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <p><h3>Connect to the CRC System via Halo to find the object processed faster</h3></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--//end BODY PAGE 3 -->
+        <div class="row container" style="width:92%;height:50px">
+            <font><h3><marquee direction="left" style="background:#AFEEEE;color:black;margin-left:1px;margin-right:-2px" onmouseover="this.stop()" onmouseout="this.start()" scrollamount="9" class="lang" key="ant1">1.No cybersecurity, no business!　　2.It is our responsibility to protect the intellectual property of the enterprise, customers, and partners.　　3.It is forbidden to install any unauthorized operating system or illegal software.</marquee></h3></font>
+        </div>
+        <!--Link support-->
+        <div class="row col-12">
+            <div class="columnt">
+                <div class="cardt" style="border-radius: 20px">
+                    <h3 style="background:#AFEEEE;color:black">IT Service</h3>
+                    <p><a href="https://appvn2.foxconn.com/" class="lang" key="halo" style="color:black">Halo Cloud App</a></p>
+                    <p><a href="https://appvn2.foxconn.com/APP1/" class="lang" key="car" style="color:black">Booking Car</a></p>
+                    <p><a href="http://10.224.69.100/goodsOut/" class="lang" key="good" style="color:black">Goodsout System</a></p>
+                    <p><a href="http://10.224.69.100/pc/" class="lang" key="PC" style="color:black">PC In Out System</a></p>
+                    <p><a href="http://10.134.171.225/cnts/" class="lang" key="ISC" style="color:black">ISC System</a></p>
+                    <br />
+                </div>
+            </div>
+            <div class="columnt">
+                <div class="cardt" style="border-radius: 20px">
+                    <h3 style="background:#AFEEEE;color:black">Service Request</h3>
+                    <p><a href="http://10.224.69.21/hrs/" class="lang" key="contact" style="color:black">Group contact information</a></p>
+                    <p><a href="http://cnsbg-bi.efoxconn.com:8383/" class="lang" key="tableau" style="color:black">Tableau Report VN_IT Site</a></p>
+                    <p><a href="https://drive.google.com/file/d/1az8A2dz_C2r0vJ2KWW6dCipe0QhXgyfX/view" style="color:black" class="lang" key="Licht">Work Schedule</a></p>
+                    <p><a href="http://10.224.69.123:888/DataFile/" class="lang" key="sopIcvet" style="color:black">SOP iCivet E-Salary</a></p>
+                    <p><a href="http://10.224.69.21/TABLEAUWEB/EXPORT_TO_EXCEL_" class="lang" key="bonepile" style="color:black">Dowload Bonepile</a></p>
+                </div>
+            </div>
+            <div class="columnt">
+                <div class="cardt" style="border-radius: 20px">
+                    <h3 style="background:#AFEEEE;color:black">Network Monitor</h3>
+                    <p><a href="http://10.224.81.111:8080/" class="lang" key="tableau" style="color:black">Monitor BN1</a></p>
+                    <p><a href="http://10.224.140.66:808/" class="lang" key="crc" style="color:black">Monitor BN2</a></p>
+                    <p><a href="http://10.224.134.50/" class="lang" key="seaRe" style="color:black">Monitor B03-MBD</a></p>
+                    <p><a href="http://10.225.35.20:8080/" class="lang" key="tableau" style="color:black">Monitor BN3</a></p>
+                    <p><a href="http://10.224.69.120/zabbix" class="lang" key="tableau" style="color:black">Monitor Zabbix</a></p>
+                </div>
+            </div>
+            <div class="columnt">
+                <div class="cardt" style="border-radius: 20px">
+                    <h3 style="background:#AFEEEE;color:black">SFC Monitor</h3>
+                    <p><a href="http://10.224.69.21/hrs/" class="lang" key="contact" style="color:black">Group contact information</a></p>
+                    <p><a href="http://cnsbg-bi.efoxconn.com:8383/" class="lang" key="tableau" style="color:black">Tableau Report VN_IT Site</a></p>
+                    <p><a href="https://drive.google.com/file/d/1az8A2dz_C2r0vJ2KWW6dCipe0QhXgyfX/view" style="color:black" class="lang" key="Licht">Work Schedule</a></p>
+                    <p><a href="http://10.224.69.123:888/DataFile/" class="lang" key="sopIcvet" style="color:black">SOP iCivet E-Salary</a></p>
+                    <p><a href="http://10.224.69.21/TABLEAUWEB/EXPORT_TO_EXCEL_" class="lang" key="bonepile" style="color:black">Dowload Bonepile</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="wrap planning row" style="width:100%;">
+            <div class="fist_line_planning">
+                <a class="col-4" href="javascript:void(0);" style="background:#F0FFFF;color:#00FFFF">
+                    <span class="color1 " id="networkInfo">
+                        <img class="icon_block" src="~/Assets/Image/network.png" style="height:30px;width:30px;margin-top:40px" />
+                        <span class="link_title" style="text-align:center">Network :</span>
+                        <span class="service_txt">
+                        </span>
+                    </span>
+                </a>
+                <a class="col-4" href="javascript:void(0);" style="background:#F0FFFF;color:#00FFFF">
+                    <span class="" id="sfcInfo">
+                        @*<img class="icon_block" src="~/Assets/Image/icon1.png" />*@
+                        <img class="icon_block" src="~/Assets/Image/phone.png" style="height:30px;width:30px;margin-top:40px" />
+                        <span class="link_title" style="text-align:center">Shopfloor :</span>
+                        <span class="service_txt">
+                        </span>
+                    </span>
+                </a>
+                <a class="col-4" href="javascript:void(0);" style="background:#F0FFFF;color:#00FFFF">
+                    <span class="color3" id="allpartInfo">
+                        <img class="icon_block" src="~/Assets/Image/setup.png" style="height:30px;width:30px;margin-top:40px" />
+                        <span class="link_title" style="text-align:center">Allpart :</span>
+                        <span class="service_txt">
+                        </span>
+                    </span>
+                </a>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--//page_container-->
+    <!--footer-->
+    <div id="footer" style="background:white;color:black">
+        <div class="wrap container">
+            <div>
+                <div class="row">
+                    <div class="span4">
+                        <h2 class="title" style="color:black">What is CRC?</h2>
+                        <p>
+                            “CRC” is the abbreviation of the “Command Response Center” , It belongs to CNSBG MIS department
+                        </p>
+                        <div>
+                            <img src="~/Assets/Image/callPhone.jpg" style="width:18px;height:18px; " /><i class="fa"></i> 535-26100
+                        </div>
+                        <div>
+                            <img src="~/Assets/Image/iconmails.png" style="width:18px;height:18px; " /> <i class="fa"></i> crc-it-vn@mail.foxconn.com
+                        </div>
+
+                    </div>
+                    <div class="span3">
+                        <h2 class="title">Popaular Searches</h2>
+                        <div class="tags">
+                            <div>
+                                <p>
+                                    Web manager
+                                </p>
+                            </div>
+                            <div>
+                                <img src="~/Assets/Image/callPhone.jpg" style="width:18px;height:18px; " /><i class="fa"></i> 535-27847
+                            </div>
+                            <div>
+                                <img src="~/Assets/Image/iconmails.png" style="width:18px;height:18px; " /> <i class="fa"></i> vngw-it-app@mail.foxconn.com
+                            </div>
+                            <p href="javascript:void(0);" style="color:black">Campaign Management</p>
+                            <p href="javascript:void(0);" style="color:black">Social Media</p>
+                            <p href="javascript:void(0);" style="color:black">Agency</p>
+                        </div>
+                    </div>
+                    <div class="span5" style="border-color:#C0C0C0">
+                        <h2 class="title">Get in touch!</h2>
+                        <form action="#" method="post" id="contact_form">
+                            <input type="text" name="name" id="name" value="Name" onFocus="if (this.value == 'Name') this.value = '';" onBlur="if (this.value == '') this.value = 'Name';" style="background:#C0C0C0" />
+                            <input type="text" name="email" id="email" value="Email" onFocus="if (this.value == 'Email') this.value = '';" onBlur="if (this.value == '') this.value = 'Email';" style="background:#C0C0C0" />
+                            <textarea name="message" id="message" onFocus="if (this.value == 'Message') this.value = '';" onBlur="if (this.value == '') this.value = 'Message';" style="background:#C0C0C0">Message</textarea>
+                            <div class="clear"></div>
+                            @*<input type="submit" class="btn btn-success" id="button-send" value="Send" style="background:#C0C0C0;color:black;" />*@
+                            <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-send"></span> Send
+                            </button>
+                            <div class="clear"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer_bottom">
+            <div class="wrap">
+                <div class="container">
+                    <div class="fleft copyright"> <a href="javascript:void(0);">© 2020 CRC Website . All rights reserved | Design by VNGW-IT-APP</a></div>
+                    <div class="fright follow_us">
+                        <ul>
+                            <li><a href="http://twitter.com/egrappler" class="soc1">vngw-it-app@mail.foxconn.com</a></li>
+                            <li><a href="http://facebook.com/egrappler" class="soc2"></a></li>
+                            <li><a href="#" class="soc3"></a></li>
+
+                        </ul>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//footer-->
+
+
+    <script src="~/Assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Assets/js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="~/Assets/js/jquery.mobile.customized.min.js"></script>
+    <script type="text/javascript" src="~/Assets/js/camera.js"></script>
+    <script src="~/Assets/js/bootstrap.js"></script>
+    <script src="~/Assets/js/superfish.js"></script>
+    <script type="text/javascript" src="~/Assets/js/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="~/Assets/js/htweet.js"></script>
+    <script type="text/javascript" src="~/Assets/js/custom.js"></script>
+</body>
+</html>
+
+
+
+

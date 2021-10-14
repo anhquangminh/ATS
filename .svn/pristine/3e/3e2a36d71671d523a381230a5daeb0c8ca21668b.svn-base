@@ -1,0 +1,207 @@
+﻿
+@{
+    ViewBag.Title = "Retrieve the eating position";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+
+<link href="~/Assets/css/tree.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Retrieve the eating position </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:green;">
+                    <h3 class="card-title"><button type="button" class="btn btn-tool"> <i class="nav-icon fas fa-map-marked"></i></button> &nbsp; Retrieve the eating position</h3>
+                </div>
+                <div class="card-body" style="padding-top:0px;padding-bottom:0px;">
+                    <!--Search condition-->
+                    <div class="form-group search-group" style="margin-bottom:0;">
+                        <div class=" p-2" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Search condition</legend>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="emp7day">Emp No/ Mã thẻ</label>
+                                                    <input type="text" class="form-control" id="emp7day" name="emp7day" placeholder="V0979820">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="timestart">Date / Ngày</label>
+                                                    <input type="date" class="form-control" id="timestart" name="timestart">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group" data-select2-id="1">
+                                                    <label for="selectmeal">Meal time / Bữa ăn</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectmeal">
+                                                        <option value="1">Breakfast / Bữa sáng</option>
+                                                        <option value="2">Lunch / Bữa trưa</option>
+                                                        <option value="3">Dinner / Bữa tối</option>
+                                                        <option value="4">Super / Bữa ăn đêm</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group" data-select2-id="1">
+                                                    <label for="selectaround">Around time / Khoảng thời gian</label>
+                                                    <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" name="area" id="selectaround">
+                                                        <option value="10">10 mins</option>
+                                                        <option value="15">15 mins</option>
+                                                        <option value="20">20 mins</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">&nbsp;</label>
+                                                    <button type="button" class="form-control btn btn-primary" onclick="searchNear();">
+                                                        <i class="fas fa-search"></i>&nbsp;
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <!--Result-->
+                    <div class="form-group result">
+                        <div class="col-md-12 message-area hidden">
+                            <i class="fas fa-warning fa-bullhorn"></i>&nbsp;&nbsp; <span id="message"></span>
+                        </div>
+                        <div class="p-2 result-found-data" style="margin-bottom: 0;">
+                            <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Result</legend>
+                                <div class="form-group position-relative">
+                                    <div style="position:absolute; right:0; font-size:.9em;">
+                                        <i class="fas fa-user f0">&nbsp;&nbsp;F0</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <i class="fas fa-user f1">&nbsp;&nbsp;F1</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <i class="fas fa-user f2">&nbsp;&nbsp;F2</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <i class="fas fa-user f3">&nbsp;&nbsp;F3</i>&nbsp;&nbsp;&nbsp;
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="label label-primary"><i class="fas fa-map-marked-alt"></i>&nbsp; Canteen layout</div>
+                                    <div class="canvasDiv">
+                                        <canvas id="mapOver" class="canvasObj"></canvas>
+                                    </div>
+                                </div>
+                                <div class="form-group padding-left-0">
+                                    <!--Left-->
+                                    <div class="col-md-9 float-left padding-left-0">
+                                        <!--
+                                            <div class="form-group col-md-12">
+                                                <!--Map over--
+                                                <div class="col-md-5 float-left canvasGroup">
+                                                    <div class="label label-primary">Canteen layout</div>
+                                                    <div class="mapOverDiv">
+                                                        <div class="canvasDiv">
+                                                            <canvas id="mapOver2" class="canvasObj"></canvas>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <button class="btn btn-success btn-sm" onclick="downloadFullView">
+                                                                <i class="fa fa-expand-arrows-alt"></i>&nbsp;&nbsp;View full layout
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--Position view--
+                                                <div class="col-md-7 float-left canvasGroup">
+                                                    <div class="label label-primary">F0 position view</div>
+                                                    <div class="canvasDiv">
+                                                        <canvas id="positionView" class="canvasObj" ></canvas>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        -->
+                                        <div class="col-md-12 padding-left-0 position-relative">
+                                            <div style="position:absolute; right:0; font-size:.9em;">
+                                                <i class="fas fa-user f0">&nbsp;&nbsp;F0</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-user f1">&nbsp;&nbsp;F1</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-user f2">&nbsp;&nbsp;F2</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-user f3">&nbsp;&nbsp;F3</i>&nbsp;&nbsp;&nbsp;
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="label label-primary"><i class="fas fa-sitemap"></i>&nbsp; Relationship tree view:</div>
+                                            <div class="col-md-12 tree treenote">
+                                                <ul id="root">
+                                                    <li id="rootEle">
+                                                        <i class="fas fa-user ficon f0"></i><br><a>V0235636</a>
+                                                        <ul>
+                                                            <li id="V0224915">
+                                                                <i class="fas fa-user ficon f1"></i><br><a>V0224915</a>
+                                                            </li>
+                                                            <li id="F0304116">
+                                                                <i class="fas fa-user ficon f1"></i><br><a>F0304116</a>
+                                                                <ul>
+                                                                    <li id="V0228832"><i class="fas fa-user ficon f2"></i><br><a>V0228832</a></li>
+                                                                    <li id="V0997391"><i class="fas fa-user ficon f2"></i><br><a>V0997391</a></li>
+                                                                    <li id="V0985423"><i class="fas fa-user ficon f2"></i><br><a>V0985423</a></li>
+                                                                    <li id="V3031995">
+                                                                        <i class="fas fa-user ficon f2"></i><br><a>V3031995</a>
+                                                                        <ul>
+                                                                            <li id="V1105464"><i class="fas fa-user ficon f3"></i><br><a>V1105464</a></li>
+                                                                            <li id="V1101538"><i class="fas fa-user ficon f3"></i><br><a>V1101538</a></li>
+                                                                        </ul>
+                                                                    </li>
+                                                                    <li id="V1006667"><i class="fas fa-user ficon f2"></i><br><a>V1006667</a></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li id="V0979820">
+                                                                <i class="fas fa-user ficon f1"></i><br><a>V0979820</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                    <!--Right-->
+                                    <div class="col-md-3 float-left padding-right-0">
+                                        <div class="label label-primary"><i class="fas fa fa-scroll"></i>&nbsp; List employee:</div>
+                                        <textarea id="listEmp" class="form-control" cols="10" rows="25"></textarea>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <!--Detail-->
+                                <div class="form-group">
+                                    <table class="table table-bordered table-striped" id="tbSearch">
+                                        <tbody id="tbodySearch"></tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/searchNear.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+

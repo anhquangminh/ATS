@@ -1,0 +1,155 @@
+﻿@model WebLink.Models.AccountModel
+@{
+    Layout = null;
+}
+<head>
+    <link href="~/Areas/Link/Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Areas/Link/Assets/css/style.css" rel="stylesheet" />
+    <link href="~/Assets/plugins/fontawesome-free/css/all.css" rel="stylesheet" />
+    <link href="~/Assets/plugins/fontawesome-free/css/fontawesome.css" rel="stylesheet" />
+
+    <link href="~/Assets/css/style.css" rel="stylesheet" />
+</head>
+<style>
+    input {
+        border: 2px solid #537b35;
+    }
+
+    form {
+        margin-left: 10px;
+        margin-right: 10px;
+        color: white;
+    }
+
+    label {
+        color: white;
+    }
+</style>
+<body style="background-image: url('../../Areas/Link/Assets/images/bg2.jpg');background-repeat: no-repeat;background-attachment: fixed;background-position: center;background-size: cover;
+">
+    <div class="sufee-login d-flex align-content-center flex-wrap">
+        <div class="container">
+            <h1 style="font-size:50px; font-weight: 300; color: #fff; letter-spacing: 7px; margin: 0px auto;text-align: center;">Manager confirm login</h1>
+            <div style="width:70%; margin: auto;">
+                <div class="login-form " style="margin-top:30px; border-radius: 5px; background: rgba(0, 0, 0, 0.5);">
+                    <h2 style="text-align:center;font-family:Arial;font-weight:bold;padding:10px;color:white;">Login</h2>
+                    @using (Html.BeginForm("Login", "ATS", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken();
+
+                        <div class="form-group">
+                            <label style="color: white;">User Name</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                <input type="text" name="UserName" class="form-control" placeholder="User Name">
+                                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: white;">Password</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-passport"></i></span>
+                                </div>
+                                <input type="password" name="Password" class="form-control" placeholder="Password">
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: white;">Captcha</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-laptop-code"></i></span>
+                                </div>
+                                <input type="text" name="captcha" class="form-control" placeholder="Captcha" id="captcha" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="captcha-container">
+                                <div class="securityCode">
+                                    <p id="code" style="margin:0px;"></p>
+                                    <div class="icons">
+                                        <span id="changeText">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="userInput">
+                    <input type="text" placeholder="Type the text here">
+                    <button type="submit" id="btn">Submit</button>
+                </div>*@
+                        </div>
+                        <div class="form-group" hidden>
+                            <label style="color: white;">Icivet OPT</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-address-card"></i></span>
+                                </div>
+                                <input type="text" name="OTP" class="form-control" placeholder="Icivet OPT">
+                            </div>
+                        </div>
+                        <div class="" style="text-align: center;">
+                            <p class="badge badge-danger" style="color: white; margin-bottom:0px;font-size:18px;">@ViewBag.ErrorMessage</p>
+                        </div>
+                        <br />
+                        <button type="button" class="btn btn-primary btn-flat m-b-30 m-t-30" id="btn">Login</button>
+                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30" id="login" hidden></button>
+                        <br />
+                        <div class="register-link m-t-15 text-center">
+                            <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+                            @Html.ActionLink("Go To Home", "Index", "Home")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Areas/Link/Assets/js/main.js"></script>
+
+</body>
+
+<script>
+    const changeTextBtn = document.querySelector('#changeText');
+    const code = document.querySelector('#code');
+    const input = document.querySelector('#captcha');
+    const submitBtn = document.querySelector('#btn');
+
+    changeTextBtn.addEventListener('click', () => {
+        code.textContent = createCaptcha();
+    });
+    window.addEventListener('load', () => {
+        code.textContent = createCaptcha();
+    });
+
+    function createCaptcha() {
+        let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        let a = letters[Math.floor(Math.random() * letters.length)];
+        let b = letters[Math.floor(Math.random() * letters.length)];
+        let c = letters[Math.floor(Math.random() * letters.length)];
+        let d = letters[Math.floor(Math.random() * letters.length)];
+        let e = letters[Math.floor(Math.random() * letters.length)];
+        let f = letters[Math.floor(Math.random() * letters.length)];
+        let g = letters[Math.floor(Math.random() * letters.length)];
+        let code = a + b + c + d + e;
+        return code;
+    }
+    submitBtn.addEventListener('click', () => {
+        let val = input.value.toLowerCase();
+        if (val == '') {
+            alert('Please Enter The code');
+        }
+        else if (val === code.textContent) {
+            document.getElementById("login").click();
+        }
+        else {
+            alert('Captcha Erro !');
+        }
+    })
+    readTextBtn.addEventListener('click', () => {
+        let text = code.textContent;
+        responsiveVoice.speak(text, { rate: 0.8 });
+    })
+</script>

@@ -1,0 +1,132 @@
+﻿.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.label-primary {
+    background-color: #428bca;
+}
+
+#listEmp {
+    height: 80vh;
+    width: 100%;
+}
+
+.label-size-85 {
+    font-size: 85% !important;
+    padding: 5px 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.label-marning-top {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.search-group label {
+    font-weight: normal !important;
+    /*font-size: 1em;*/
+}
+
+.canvasObj {
+}
+
+.canvas-full-size {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.canvasGroup {
+    height: 400px;
+    position: relative;
+}
+
+.canvasDiv {
+    overflow: auto;
+    border: 1px solid #808080;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    background-color: whitesmoke;
+    height: 370px;
+    height: 60vh;
+    position: relative;
+    padding: .2em;
+}
+
+.mapOverDiv {
+    position: relative;
+}
+
+    .mapOverDiv canvas {
+        position: absolute;
+    }
+
+    .mapOverDiv button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+#mapOver1 {
+    height: 15em;
+}
+
+#positionView1 {
+    height: 17.3em;
+}
+
+.treenote {
+    padding: 1em;
+    border: 1px solid #808080;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    height: 80vh;
+    overflow: auto;
+    text-align:center;
+}
+
+.padding-left-0 {
+    padding-left: 0;
+}
+
+.padding-right-0 {
+    padding-right: 0;
+}
+.position-relative{
+    position: relative;
+}
+.position-absolute{
+    position: absolute;
+}
+.hidden{
+    display: none;
+}
+.show{
+    display: block;
+}
+.message-area{
+    padding: 1em;
+    text-align: center;
+    border: 1px solid #808080;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #fbd8d8;
+}
+#root{
+    width: 10000px;
+    display: block;
+}
+#rootEle{
+    /*width: 10000px;*/
+}

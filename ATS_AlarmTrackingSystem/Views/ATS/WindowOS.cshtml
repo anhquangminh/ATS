@@ -1,0 +1,185 @@
+﻿@model IEnumerable<ATS_AlarmTrackingSystem.Models.WIndowOS>
+
+@{
+    ViewBag.Title = "InsertExcel";
+    Layout = "~/Views/Shared/_LayoutATS.cshtml";
+}
+<br />
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script type="text/javascript">
+        alert("@ViewBag.Message");
+    </script>
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6 col-12">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">PACKAGE UPLOAD FILE</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="card col-7">
+                    <div class="card-header bg-success "> Upload file excel  </div>
+                    <div class="card-body" style="background-color: aliceblue;">
+                        <div class="row">
+                            @using (Html.BeginForm("WindowOS", "ATS", FormMethod.Post, new { enctype = "multipart/form-data", @class = "col-12" }))
+                            {
+                                <div class="form-group">
+                                    <div class="card p-2" style="margin-bottom: 0;">
+                                        <fieldset class="scheduler-border" style="border: 1px solid #888888; padding: 0 1em 0.75em 1em; width: 100%; border-radius: 3px; -webkit-box-shadow: 0px 0px 0px 0px #ced4da;">
+                                            <legend class="scheduler-border" style="font-size: 15px; text-align: left; width: auto; padding: 0 10px; border-bottom: none;">Import excel file</legend>
+                                            <div class="row col-12">
+                                                <div class="col-md-6">
+                                                    <label class="control-label col-md-12 ">Choose file</label>
+                                                    <input name="file" type="file" class="form-control" style="padding-top: 3px; padding-left: 3px;" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="control-label col-md-12"> <span style="display:none">Phan lay du lieu</span> </label>
+                                                    <input type="submit" class="col-12 btn-outline-primary form-control" value="Tải lên" style="margin-top:7px;" />
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-bordered  table-hover" id="table_WindowOS" style="border-collapse: collapse;font-family: arial; font-size:13px;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>owner</th>
+                            <th>package</th>
+                            <th>windowversion</th>
+                            <th>MS_Release</th>
+                            <th>IT_improve_Date</th>
+                            <th>input_date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        @*@foreach (var item in ViewBag.Data)
+                            {
+                                <tr>
+                                    <td>@item.Owner</td>
+                                    <td>@item.Package</td>
+                                    <td>@item.WindowOS</td>
+                                    <td>@item.MSrelease</td>
+                                    <td>@item.ITrelease</td>
+                                    <td>@item.Input_date</td>
+                                </tr>
+                            }*@
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>owner</th>
+                            <th>package</th>
+                            <th>windowversion</th>
+                            <th>MS_Release</th>
+                            <th>IT_improve_Date</th>
+                            <th>input_date</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </section>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card card-blue" style="margin:0px">
+                <div class="card-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit infor</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="text" id="Input_date" name="Input_date" hidden/>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-inbox"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Owner" name="Owner" id="Owner">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Package" name="Package" id="Package">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="WindowOS" name="WindowOS" id="WindowOS">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                </div>
+                                <input type="date" class="form-control" placeholder="MSrelease" name="MSrelease" id="MSrelease">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+                                </div>
+                                <input type="date" class="form-control" placeholder="ITrelease" name="ITrelease" id="ITrelease">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="card-footer" style="align-content:center;text-align:center">
+                    <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="UpdateOS();">Update</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script type="text/javascript">
+        alert("@ViewBag.Message");
+       
+    </script>
+}
+
+<script src="~/Assets/DataTable/jquery-3.5.1.js"></script>
+<script src="~/Scripts/ajax/os_ajax.js"></script>
+<script src="~/Assets/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Assets/DataTable/jquery.dataTables.min.css" rel="stylesheet" />

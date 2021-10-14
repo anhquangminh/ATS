@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATS_AlarmTrackingSystem", "ATS_AlarmTrackingSystem\ATS_AlarmTrackingSystem.csproj", "{3F069244-2783-4FAE-AF8A-2B12C9F87A4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D2B70FB-0AF4-488E-B2E5-8253400B0699}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F069244-2783-4FAE-AF8A-2B12C9F87A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F069244-2783-4FAE-AF8A-2B12C9F87A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F069244-2783-4FAE-AF8A-2B12C9F87A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F069244-2783-4FAE-AF8A-2B12C9F87A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {756D208A-2715-4681-8051-2D03F57290EC}
+	EndGlobalSection
+EndGlobal
